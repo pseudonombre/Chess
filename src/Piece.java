@@ -36,7 +36,7 @@ public abstract class Piece {
      * @return a move in the specified direction the specified distance.
      */
     private static Move generateDirectionalMove(int[] direction, int distance){
-        return new Move();
+        return new Move(new int[2], new ArrayList<int[]>(), Move.CaptureStatus.ANY);
     }
 
     /**
