@@ -1,6 +1,20 @@
+/**
+ * Represents one player in the game. Gets the player's input.
+ */
 public class Player {
+    /**
+     * The player's name
+     */
     private String name;
+
+    /**
+     * Sets the player's name to the input string
+     */
     public void setName(String c_name) {name = c_name;}
+
+    /**
+     * @return the player's name
+     */
     public String getName() {return name;}
 
     /**
