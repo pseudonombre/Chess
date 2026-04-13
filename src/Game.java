@@ -1,9 +1,25 @@
 import java.util.Stack;
 
+/**
+ * Models a game of chess. Holds current and past board states and allows the players' input to be applied
+ * to the current board.
+ */
 public class Game {
+    /**
+     * The two players to ask for input
+     */
     private Player[] players;
+    /**
+     * Past boards that can be rolled back to
+     */
     private Stack<Board> undoStack;
+    /**
+     * Future boards present if undo was used and no moves have been made since
+     */
     private Stack<Board> redoStack;
+    /**
+     * True if white moves next, false otherwise
+     */
     private boolean whiteToMove;
 
     /**
@@ -18,5 +34,17 @@ public class Game {
      */
     public void play() {
 
+    }
+
+    /**
+     * Moves back one move in the history
+     */
+    private void undo() {
+    }
+
+    /**
+     * Moves forward one move in the history
+     */
+    private void redo() {
     }
 }
