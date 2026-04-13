@@ -1,14 +1,32 @@
 import java.util.ArrayList;
 
+/**
+ * Abstract piece class to model individual piece classes after. Importantly, pieces are not responsible for their
+ * positions.
+ */
 public abstract class Piece {
+    /**
+     * True if the piece is white, false if black.
+     */
     private final boolean isWhite;
+    /**
+     * @return True if the piece is white, false if black.
+     */
     public boolean getIsWhite(){return isWhite;}
+    /**
+     * The character to print for this piece when displaying the board
+     */
     private final char printCharacter;
+    /**
+     * @return The character to print for this piece when displaying the board
+     */
     public char getPrintCharacter(){return printCharacter;}
-    /* Each child class should implement
-        private static final ArrayList<Move> possMoves;
-    to simplify future calls to getPossMoves */
 
+    /**
+     * Creates a new piece
+     * @param c_isWhite True if the piece is white, false if black.
+     * @param c_printCharacter The character to print for this piece when displaying the board
+     */
     public Piece(boolean c_isWhite, char c_printCharacter) {
         isWhite = c_isWhite;
         printCharacter = c_printCharacter;
@@ -23,7 +41,10 @@ public abstract class Piece {
     public abstract Move getMove(int[] destination);
 
     /**
-     * Get a list of all possible moves
+     * Get a list of all possible moves.
+     * Each child class should implement
+     * "private static final ArrayList<Move> possMoves;"
+     * to simplify future calls to getPossMoves, but this is not enforced.
      * @return a list of all possible moves, with each move's final position at the start of its list followed by
      * a list of spaces which must be empty for the move to be possible
      */
