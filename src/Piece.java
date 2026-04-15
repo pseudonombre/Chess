@@ -33,20 +33,18 @@ public abstract class Piece {
     }
 
     /**
-     * Tests whether a move would be possible on an empty, infinite board and finds the list of spaces
-     * which would need to be empty for the move to work.
-     * @return null if the move is not possible, otherwise an ArrayList with the destination square followed by
-     * the squares that must be empty for the move to be possible.
+     * Gets the move corresponding to a given destination relative to [0,0].
+     * @param destination The destination of the move relative to [0,0]
+     * @return A move corresponding to the given destination if possible, null if no such legal move exists.
      */
     public abstract Move getMove(int[] destination);
 
     /**
-     * Get a list of all possible moves.
-     * Each child class should implement
-     * "private static final ArrayList<Move> possMoves;"
-     * to simplify future calls to getPossMoves, but this is not enforced.
-     * @return a list of all possible moves, with each move's final position at the start of its list followed by
-     * a list of spaces which must be empty for the move to be possible
+     * Gets a list of all possible  relative to [0,0]. Generates the list only if possMoves has not been filled.
+     *      * Each child class should implement
+     *      * "private static final ArrayList<Move> possMoves;"
+     *      * to simplify future calls to getPossMoves, but this is not enforced.
+     * @return A list of all possible moves relative to [0,0]
      */
     public abstract ArrayList<Move> getPossMoves();
 
