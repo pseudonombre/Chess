@@ -1,21 +1,34 @@
+package Piece;
+
+import Move.Move;
 import java.util.ArrayList;
 
 
 /**
- * Implements the pawn.
+ * Implements the king.
  */
-public class Pawn extends Piece {
+public class King extends Piece {
     /**
      * holds the list of possible moves to avoid regenerating it on every call to getPossMoves().
      */
-    private static final ArrayList<Move> possMoves = new Pawn(true).getPossMoves();
+    private static final ArrayList<Move> possMoves = new King(true).getPossMoves();
 
     /**
-     * Creates a new pawn
+     * Whether or not the piece has moved. Used for castling.
+     */
+    private boolean hasMoved = false;
+
+    /**
+     * Gets whether or not the piece has moved. Used for castling.
+     */
+    private boolean getHasMoved() { return hasMoved; }
+
+    /**
+     * Creates a new king
      * @param c_isWhite True if the piece is white, false if black.
      */
-    public Pawn(boolean c_isWhite) {
-        super(c_isWhite, 'p');
+    public King(boolean c_isWhite) {
+        super(c_isWhite, 'K');
     }
 
     /**
@@ -36,6 +49,11 @@ public class Pawn extends Piece {
     public ArrayList<Move> getPossMoves() {
         if(possMoves != null){ return possMoves; }
         return null;
+    }
+
+    @Override
+    public void move(Move m) {
+        hasMoved = true;
     }
 
 }

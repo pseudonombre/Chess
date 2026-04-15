@@ -1,21 +1,34 @@
+package Piece;
+
+import Move.Move;
 import java.util.ArrayList;
 
 
 /**
- * Implements the knight.
+ * Implements the rook.
  */
-public class Knight extends Piece {
+public class Rook extends Piece {
     /**
      * holds the list of possible moves to avoid regenerating it on every call to getPossMoves().
      */
-    private static final ArrayList<Move> possMoves = new Knight(true).getPossMoves();
+    private static final ArrayList<Move> possMoves = new Rook(true).getPossMoves();
 
     /**
-     * Creates a new knight
+     * Whether or not the piece has moved. Used for castling.
+     */
+    private boolean hasMoved = false;
+
+    /**
+     * Gets whether or not the piece has moved. Used for castling.
+     */
+    private boolean getHasMoved() { return hasMoved; }
+
+    /**
+     * Creates a new rook
      * @param c_isWhite True if the piece is white, false if black.
      */
-    public Knight(boolean c_isWhite) {
-        super(c_isWhite, 'N');
+    public Rook(boolean c_isWhite) {
+        super(c_isWhite, 'R');
     }
 
     /**
@@ -36,6 +49,11 @@ public class Knight extends Piece {
     public ArrayList<Move> getPossMoves() {
         if(possMoves != null){ return possMoves; }
         return null;
+    }
+
+    @Override
+    public void move(Move m) {
+        hasMoved = true;
     }
 
 }

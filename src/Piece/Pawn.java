@@ -1,21 +1,34 @@
+package Piece;
+
+import Move.Move;
 import java.util.ArrayList;
 
 
 /**
- * Implements the rook.
+ * Implements the pawn.
  */
-public class Rook extends Piece {
+public class Pawn extends Piece {
     /**
      * holds the list of possible moves to avoid regenerating it on every call to getPossMoves().
      */
-    private static final ArrayList<Move> possMoves = new Rook(true).getPossMoves();
+    private static final ArrayList<Move> possMoves = new Pawn(true).getPossMoves();
 
     /**
-     * Creates a new rook
+     * Whether or not the piece has moved. Used for jumping two spaces on the first move.
+     */
+    private boolean hasMoved = false;
+
+    /**
+     * Gets whether or not the piece has moved. Used for jumping two spaces on the first move.
+     */
+    private boolean getHasMoved() { return hasMoved; }
+
+    /**
+     * Creates a new pawn
      * @param c_isWhite True if the piece is white, false if black.
      */
-    public Rook(boolean c_isWhite) {
-        super(c_isWhite, 'R');
+    public Pawn(boolean c_isWhite) {
+        super(c_isWhite, 'p');
     }
 
     /**
@@ -36,6 +49,11 @@ public class Rook extends Piece {
     public ArrayList<Move> getPossMoves() {
         if(possMoves != null){ return possMoves; }
         return null;
+    }
+
+    @Override
+    public void move(Move m) {
+        hasMoved = true;
     }
 
 }

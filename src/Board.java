@@ -1,3 +1,6 @@
+import Move.Move;
+import Piece.*;
+
 /**
  * Represents a board. holds pieces and manages whether movement is possible
  */
@@ -37,8 +40,8 @@ public class Board {
 
     /**
      * Checks whether a move is possible by:
-     *     getting if the piece would be able to move there on an empty board (call Piece.isPossible),
-     *     getting the squares that must be empty (call Piece.isPossible) and checking if they are empty
+     *     getting if the piece would be able to move there on an empty board (call Piece.Piece.isPossible),
+     *     getting the squares that must be empty (call Piece.Piece.isPossible) and checking if they are empty
      *     and the moving player's king is not in check
      * @param move the move to check the possibility of
      * @param from where the move is from

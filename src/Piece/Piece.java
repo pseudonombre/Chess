@@ -1,3 +1,6 @@
+package Piece;
+
+import Move.Move;
 import java.util.ArrayList;
 
 /**
@@ -42,11 +45,17 @@ public abstract class Piece {
     /**
      * Gets a list of all possible  relative to [0,0]. Generates the list only if possMoves has not been filled.
      *      * Each child class should implement
-     *      * "private static final ArrayList<Move> possMoves;"
+     *      * "private static final ArrayList<Move.Move> possMoves;"
      *      * to simplify future calls to getPossMoves, but this is not enforced.
      * @return A list of all possible moves relative to [0,0]
      */
     public abstract ArrayList<Move> getPossMoves();
+
+    /**
+     * Abstract method to update components of a piece's internal state upon moving it.
+     * @param m The move being played
+     */
+    public abstract void move(Move m);
 
     /**
      * Generates all squares in the specified direction
@@ -54,7 +63,7 @@ public abstract class Piece {
      * @param distance the longest that the piece is able to move. Capped to seven due to board size eight.
      * @return a move in the specified direction the specified distance.
      */
-    private static Move generateDirectionalMove(int[] direction, int distance){
+    public static Move generateDirectionalMove(int[] direction, int distance){
         return new Move(new int[2], new ArrayList<int[]>(), Move.CaptureStatus.ANY);
     }
 
@@ -64,7 +73,7 @@ public abstract class Piece {
      * @param limit the longest that the piece is able to move. Capped to seven due to board size eight.
      * @return a list of all moves in a direction up to and including limit
      */
-    private static ArrayList<Move> generateDirectionalMoves(int[] direction, int limit){
+    public static ArrayList<Move> generateDirectionalMoves(int[] direction, int limit){
         return new ArrayList<Move>();
     }
 }

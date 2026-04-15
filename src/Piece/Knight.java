@@ -1,21 +1,24 @@
+package Piece;
+
+import Move.Move;
 import java.util.ArrayList;
 
 
 /**
- * Implements the queen.
+ * Implements the knight.
  */
-public class Queen extends Piece {
+public class Knight extends Piece {
     /**
      * holds the list of possible moves to avoid regenerating it on every call to getPossMoves().
      */
-    private static final ArrayList<Move> possMoves = new Queen(true).getPossMoves();
+    private static final ArrayList<Move> possMoves = new Knight(true).getPossMoves();
 
     /**
-     * Creates a new queen
+     * Creates a new knight
      * @param c_isWhite True if the piece is white, false if black.
      */
-    public Queen(boolean c_isWhite) {
-        super(c_isWhite, 'Q');
+    public Knight(boolean c_isWhite) {
+        super(c_isWhite, 'N');
     }
 
     /**
@@ -36,6 +39,10 @@ public class Queen extends Piece {
     public ArrayList<Move> getPossMoves() {
         if(possMoves != null){ return possMoves; }
         return null;
+    }
+
+    @Override
+    public void move(Move m) {
     }
 
 }

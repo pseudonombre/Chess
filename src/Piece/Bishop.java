@@ -1,3 +1,6 @@
+package Piece;
+
+import Move.Move;
 import java.util.ArrayList;
 
 
@@ -36,6 +39,10 @@ public class Bishop extends Piece {
     public ArrayList<Move> getPossMoves() {
         if(possMoves != null){ return possMoves; }
         return null;
+    }
+
+    @Override
+    public void move(Move m) {
     }
 
 }
