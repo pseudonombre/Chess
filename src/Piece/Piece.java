@@ -63,8 +63,18 @@ public abstract class Piece {
      * @param distance the longest that the piece is able to move. Capped to seven due to board size eight.
      * @return a move in the specified direction the specified distance.
      */
-    public static Move generateDirectionalMove(int[] direction, int distance){
-        return new Move(new int[2], new ArrayList<int[]>(), Move.CaptureStatus.ANY);
+    public static Move generateDirectionalMove(int[] direction, int distance, Move.CaptureStatus captureStatus){
+        if(direction.length != 2) { throw new IllegalArgumentException(); }
+        if(distance < 1) { throw new IllegalArgumentException(); }
+
+        int[] currentSquare = direction.clone();
+        ArrayList<int[]> path = new ArrayList<>();
+        for (int i = 0; i < distance - 1; i++) {
+            path.add(currentSquare.clone());
+            currentSquare[0] += direction[0];
+            currentSquare[1] += direction[1];
+        }
+        return new Move(currentSquare, path, captureStatus);
     }
 
     /**
@@ -73,7 +83,14 @@ public abstract class Piece {
      * @param limit the longest that the piece is able to move. Capped to seven due to board size eight.
      * @return a list of all moves in a direction up to and including limit
      */
-    public static ArrayList<Move> generateDirectionalMoves(int[] direction, int limit){
-        return new ArrayList<Move>();
+    public static ArrayList<Move> generateDirectionalMoves(int[] direction, int limit, Move.CaptureStatus captureStatus){
+        if(direction.length != 2) { throw new IllegalArgumentException(); }
+        if(limit < 1) { throw new IllegalArgumentException(); }
+
+        ArrayList<Move> ret = new ArrayList<Move>();
+        for (int i = 0; i < limit; i++) {
+            ret.add(generateDirectionalMove(direction, i, captureStatus));
+        }
+        return ret;
     }
 }
