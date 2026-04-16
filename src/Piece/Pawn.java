@@ -48,7 +48,19 @@ public class Pawn extends Piece {
     @Override
     public ArrayList<Move> getPossMoves() {
         if(possMoves != null){ return possMoves; }
-        return null;
+        ArrayList<Move> ret = new ArrayList<>();
+
+        ret.add(new Move(new int[] {0,1}, null, Move.CaptureStatus.CANNOT_CAPTURE));
+        ret.add(new Move(new int[] {1,1}, null, Move.CaptureStatus.MUST_CAPTURE));
+        ret.add(new Move(new int[] {-1,1}, null, Move.CaptureStatus.MUST_CAPTURE));
+        //TODO: Find way to enforce the following move happening only on first move
+
+        /* hasMoved variable already exists
+           Possibly add an optional lambda function to Move that Board can run that must return true?
+           Maybe add a lambda that runs after the move for promotion*/
+        //ret.add(new Move(new int[] {0,2}, null, Move.CaptureStatus.CANNOT_CAPTURE));
+
+        return ret;
     }
 
     @Override

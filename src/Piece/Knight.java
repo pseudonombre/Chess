@@ -38,7 +38,19 @@ public class Knight extends Piece {
     @Override
     public ArrayList<Move> getPossMoves() {
         if(possMoves != null){ return possMoves; }
-        return null;
+        ArrayList<Move> ret = new ArrayList<>();
+
+        ret.add(new Move(new int[] {2,1}, null, Move.CaptureStatus.ANY));
+        ret.add(new Move(new int[] {2,-1}, null, Move.CaptureStatus.ANY));
+        ret.add(new Move(new int[] {-2,1}, null, Move.CaptureStatus.ANY));
+        ret.add(new Move(new int[] {-2,-1}, null, Move.CaptureStatus.ANY));
+
+        ret.add(new Move(new int[] {1,2}, null, Move.CaptureStatus.ANY));
+        ret.add(new Move(new int[] {1,-2}, null, Move.CaptureStatus.ANY));
+        ret.add(new Move(new int[] {-1,2}, null, Move.CaptureStatus.ANY));
+        ret.add(new Move(new int[] {-1,-2}, null, Move.CaptureStatus.ANY));
+
+        return ret;
     }
 
     @Override

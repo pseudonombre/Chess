@@ -38,7 +38,14 @@ public class Bishop extends Piece {
     @Override
     public ArrayList<Move> getPossMoves() {
         if(possMoves != null){ return possMoves; }
-        return null;
+        ArrayList<Move> ret = new ArrayList<>();
+
+        ret.addAll(generateDirectionalMoves(new int[] {1,1}, 7, Move.CaptureStatus.ANY));
+        ret.addAll(generateDirectionalMoves(new int[] {1,-1}, 7, Move.CaptureStatus.ANY));
+        ret.addAll(generateDirectionalMoves(new int[] {-1,1}, 7, Move.CaptureStatus.ANY));
+        ret.addAll(generateDirectionalMoves(new int[] {-1,-1}, 7, Move.CaptureStatus.ANY));
+
+        return ret;
     }
 
     @Override

@@ -48,7 +48,19 @@ public class King extends Piece {
     @Override
     public ArrayList<Move> getPossMoves() {
         if(possMoves != null){ return possMoves; }
-        return null;
+        ArrayList<Move> ret = new ArrayList<>();
+
+        ret.addAll(generateDirectionalMoves(new int[] {1,0}, 1, Move.CaptureStatus.ANY));
+        ret.addAll(generateDirectionalMoves(new int[] {0,1}, 1, Move.CaptureStatus.ANY));
+        ret.addAll(generateDirectionalMoves(new int[] {-1,0}, 1, Move.CaptureStatus.ANY));
+        ret.addAll(generateDirectionalMoves(new int[] {0,-1}, 1, Move.CaptureStatus.ANY));
+
+        ret.addAll(generateDirectionalMoves(new int[] {1,1}, 1, Move.CaptureStatus.ANY));
+        ret.addAll(generateDirectionalMoves(new int[] {1,-1}, 1, Move.CaptureStatus.ANY));
+        ret.addAll(generateDirectionalMoves(new int[] {-1,1}, 1, Move.CaptureStatus.ANY));
+        ret.addAll(generateDirectionalMoves(new int[] {-1,-1}, 1, Move.CaptureStatus.ANY));
+
+        return ret;
     }
 
     @Override
