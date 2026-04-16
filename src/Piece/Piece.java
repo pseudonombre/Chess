@@ -1,6 +1,8 @@
 package Piece;
 
 import Move.Move;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -40,7 +42,15 @@ public abstract class Piece {
      * @param destination The destination of the move relative to [0,0]
      * @return A move corresponding to the given destination if possible, null if no such legal move exists.
      */
-    public abstract Move getMove(int[] destination);
+    public Move getMove(int[] destination) {
+        ArrayList<Move> moveList = getPossMoves();
+        for(Move m : moveList) {
+            if(m.getDestination() == destination) {
+                return m;
+            }
+        }
+        return null;
+    }
 
     /**
      * Gets a list of all possible  relative to [0,0]. Generates the list only if possMoves has not been filled.

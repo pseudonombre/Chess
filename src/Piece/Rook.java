@@ -31,15 +31,6 @@ public class Rook extends Piece {
         super(c_isWhite, 'R');
     }
 
-    /**
-     * Gets the move corresponding to a given destination relative to [0,0].
-     * @param destination The destination of the move relative to [0,0]
-     * @return A move corresponding to the given destination if possible, null if no such legal move exists.
-     */
-    @Override
-    public Move getMove(int[] destination) {
-        return null;
-    }
 
     /**
      * Gets a list of all possible  relative to [0,0]. Generates the list only if possMoves has not been filled.
