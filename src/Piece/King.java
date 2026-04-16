@@ -50,6 +50,8 @@ public class King extends Piece {
         ret.addAll(generateDirectionalMoves(new int[] {-1,1}, 1, Move.CaptureStatus.ANY));
         ret.addAll(generateDirectionalMoves(new int[] {-1,-1}, 1, Move.CaptureStatus.ANY));
 
+        //TODO: Add castling
+
         return ret;
     }
 

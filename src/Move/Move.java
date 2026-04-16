@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Utility to hold information about a move. Relative to [0,0].
  */
 public class Move {
+    //TODO: add ability to hold lambdas to run before and after move
     /**
      * Destination of the move. Relative to [0,0].
      */

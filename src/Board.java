@@ -14,6 +14,7 @@ public class Board {
      * Creates a new board with the standard chess starting position
      */
     public Board(){
+        //TODO: implement
     }
 
     /**
@@ -21,12 +22,15 @@ public class Board {
      * @param c_pieces the configuration to put the new board in
      */
     public Board(Piece[][] c_pieces){
+        //TODO: implement
     }
 
     /**
      * @return a string representation of the board
      */
     public String getString() {
+
+        //TODO: implement
         return null;
     }
 
@@ -35,6 +39,7 @@ public class Board {
      * @return true if the king of the correct color is in check
      */
     public boolean kingInCheck(boolean white) {
+        //TODO: implement
         return false;
     }
 
@@ -48,6 +53,7 @@ public class Board {
      * @return true if the move is legal according to the rules of chess
      */
     public boolean isPossible(Move move, int[] from) {
+        //TODO: implement
         return false;
     }
 
@@ -57,5 +63,6 @@ public class Board {
      * @param from where the move is from
      */
     public void makeMove(Move move, int[] from) {
+        //TODO: implement
     }
 }

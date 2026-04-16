@@ -50,6 +50,8 @@ public class Pawn extends Piece {
            Maybe add a lambda that runs after the move for promotion*/
         //ret.add(new Move(new int[] {0,2}, null, Move.CaptureStatus.CANNOT_CAPTURE));
 
+        //En passant??
+
         return ret;
     }
 
