@@ -14,7 +14,62 @@ public class Board {
      * Creates a new board with the standard chess starting position
      */
     public Board(){
-        //TODO: implement
+        this.pieces[0] = new Piece[] {
+                new Rook(true),
+                new Pawn(true),
+                null, null, null, null,
+                new Pawn(false),
+                new Rook(false)
+        };
+        this.pieces[0] = new Piece[] {
+                new Knight(true),
+                new Pawn(true),
+                null, null, null, null,
+                new Pawn(false),
+                new Knight(false)
+        };
+        this.pieces[0] = new Piece[] {
+                new Bishop(true),
+                new Pawn(true),
+                null, null, null, null,
+                new Pawn(false),
+                new Bishop(false)
+        };
+        this.pieces[0] = new Piece[] {
+                new Queen(true),
+                new Pawn(true),
+                null, null, null, null,
+                new Pawn(false),
+                new Queen(false)
+        };
+        this.pieces[0] = new Piece[] {
+                new King(true),
+                new Pawn(true),
+                null, null, null, null,
+                new Pawn(false),
+                new King(false)
+        };
+        this.pieces[0] = new Piece[] {
+                new Bishop(true),
+                new Pawn(true),
+                null, null, null, null,
+                new Pawn(false),
+                new Bishop(false)
+        };
+        this.pieces[0] = new Piece[] {
+                new Knight(true),
+                new Pawn(true),
+                null, null, null, null,
+                new Pawn(false),
+                new Knight(false)
+        };
+        this.pieces[0] = new Piece[] {
+                new Rook(true),
+                new Pawn(true),
+                null, null, null, null,
+                new Pawn(false),
+                new Rook(false)
+        };
     }
 
     /**
