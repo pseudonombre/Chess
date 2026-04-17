@@ -1,5 +1,6 @@
 import Move.Move;
 
+import java.util.Scanner;
 import java.util.Stack;
 
 /**
@@ -35,18 +36,50 @@ public class Game {
      * Plays a game. Gets player's moves and plays them in a loop until the game ends
      */
     public void play() {
-        //TODO: implement
+        //TODO: display starting info
         Player currentPlayer = players[0];
         while(true) {
+            //Print board
+            System.out.println(undoStack.peek().getString());
             //get input
             int[][] currentInput = getInput();
+            //currentInput is null if the player entered something invalid
+            if(currentInput == null) {
+                System.out.println("Invalid input");
+                continue;
+            }
+            //non-normal move inputs return lengths of one
+            if(currentInput.length == 1){
+                switch(currentInput[0][0]){
+                    case Player.otherInputs.OFFER_DRAW:
+                        if(offerDraw()) {
+                            endScreen(false, true);
+                            return;
+                        }
+                        continue;
+                    case Player.otherInputs.RESIGN:
+                        endScreen(!whiteToMove);
+                        return;
+                    case Player.otherInputs.UNDO:
+                        undo();
+                        continue;
+                    case Player.otherInputs.REDO:
+                        redo();
+                        continue;
+                }
+            }
             Move currentMove = undoStack.peek().getMove(currentInput);
             //test if it is legal
-            if(currentMove == null) { continue; }
+            if(currentMove == null) {
+
+                System.out.println("Illegal move");
+                continue;
+            }
             //play it
             undoStack.push(new Board(undoStack.peek()));
             undoStack.peek().makeMove(currentMove, currentInput[0]);
-            //TODO: Check for checkmate and stalemate
+            redoStack.clear();
+            //TODO: Check for checkmate and stalemate / king being captured
             //make it the other player's move
             whiteToMove = !whiteToMove;
 
@@ -70,16 +103,62 @@ public class Game {
     }
 
     /**
+     * offers a draw to the other player
+     * @return true if draw accepted
+     */
+    private boolean offerDraw() {
+        // playerOffered is the opposite of the player whose turn it is
+        String playerOffered;
+        if(whiteToMove){
+            playerOffered = players[1].getName();
+        } else {
+            playerOffered = players[0].getName();
+        }
+        System.out.println(playerOffered + ", do you accept the draw offer? (Y or N): ");
+        String input = new Scanner(System.in).nextLine();
+        input = input.strip().toLowerCase();
+        if(input == "y" || input == "yes") {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Moves back one move in the history
      */
     private void undo() {
-        //TODO: implement
+        redoStack.push(undoStack.pop());
+        whiteToMove = !whiteToMove;
     }
 
     /**
      * Moves forward one move in the history
      */
     private void redo() {
-        //TODO: implement
+        undoStack.push(redoStack.pop());
+        whiteToMove = !whiteToMove;
+    }
+
+    /**
+     * Displays end screen
+     */
+    private void endScreen(boolean whiteWins) {
+        endScreen(whiteWins, false);
+    }
+
+    /**
+     * Displays end screen
+     */
+    private void endScreen(boolean whiteWins, boolean draw) {
+        if(draw) {
+            System.out.println("It's a draw!");
+            return;
+        }
+        if(whiteWins) {
+            System.out.print(players[0].getName());
+        } else {
+            System.out.print(players[1].getName());
+        }
+        System.out.println(" wins!");
     }
 }

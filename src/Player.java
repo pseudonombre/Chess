@@ -29,17 +29,61 @@ public class Player {
         System.out.print(name + ": enter input in the format of two coordinates\n" +
                 "E.G. \"a2 a4\" or \"a2 to a4\" to move white's a pawn two spaces: ");
         String input = new Scanner(System.in).nextLine();
-        input = input.strip();
+        input = input.strip().toLowerCase();
+        switch(input) {
+            case "offer draw":
+                return new int[][] {{otherInputs.OFFER_DRAW.ordinal()}};
+            case "resign":
+                return new int[][] {{otherInputs.RESIGN.ordinal()}};
+            case "undo":
+                return new int[][] {{otherInputs.UNDO.ordinal()}};
+            case "redo":
+                return new int[][] {{otherInputs.REDO.ordinal()}};
+        }
 
         int[][] ret = new int[2][2];
-        ret[0][0] = input.charAt(0) - 'a';
-        ret[0][1] = input.charAt(1) - '1';
+        ret[0][0] = getFile(input.charAt(0));
+        ret[0][1] = getRank(input.charAt(1));
 
         input = input.substring(input.length() - 2);
 
-        ret[1][0] = input.charAt(0) - 'a';
-        ret[1][1] = input.charAt(1) - '1';
+        ret[1][0] = getFile(input.charAt(0));
+        ret[1][1] = getRank(input.charAt(1));
+
+        for(int[] a : ret) {
+            for(int i : a) {
+                if(i == -1) { return null; }
+            }
+        }
 
         return ret;
     }
+
+    /**
+     * gets file (column) from character
+     * @param c the name of the file
+     * @return the file number referred to by the character
+     */
+    private int getFile(char c) {
+        return "abcdefgh".indexOf(c);
+    }
+
+    /**
+     * gets rank (row) from character
+     * @param c the number of the rank
+     * @return the rank number referred to by the character
+     */
+    private int getRank(char c) {
+        return "12345678".indexOf(c);
+    }
+
+    /**
+     * Inputs other than normal moves
+     */
+    public enum otherInputs {
+        OFFER_DRAW,
+        RESIGN,
+        UNDO,
+        REDO
+    };
 }
