@@ -15,15 +15,15 @@ public class Game {
     /**
      * Past boards that can be rolled back to
      */
-    private Stack<Board> undoStack;
+    private Stack<Board> undoStack = new Stack<>();
     /**
      * Future boards present if undo was used and no moves have been made since
      */
-    private Stack<Board> redoStack;
+    private Stack<Board> redoStack = new Stack<>();
     /**
      * True if white moves next, false otherwise
      */
-    private boolean whiteToMove;
+    private boolean whiteToMove = true;
 
     /**
      * Creates a new game
@@ -61,28 +61,31 @@ public class Game {
             }
             //non-normal move inputs return lengths of one
             if(currentInput.length == 1){
+                //int offer_draw = Player.otherInputs.OFFER_DRAW.ordinal();
                 switch(currentInput[0][0]){
-                    case Player.otherInputs.OFFER_DRAW:
+                    // This really shouldn't be hardcoded but architecture is hard
+                    case 0://Player.otherInputs.OFFER_DRAW:
                         if(offerDraw()) {
                             endScreen(false, true);
                             return;
                         }
                         continue;
-                    case Player.otherInputs.RESIGN:
+                    case 1://Player.otherInputs.RESIGN:
                         endScreen(!whiteToMove);
                         return;
-                    case Player.otherInputs.UNDO:
+                    case 2://Player.otherInputs.UNDO:
                         undo();
                         continue;
-                    case Player.otherInputs.REDO:
+                    case 3://Player.otherInputs.REDO:
                         redo();
                         continue;
+                    default:
+                        throw new IllegalArgumentException("Player.getMove() returned [" + currentInput[0] + "]");
                 }
             }
             Move currentMove = undoStack.peek().getMove(currentInput);
             //test if it is legal
             if(currentMove == null) {
-
                 System.out.println("Illegal move");
                 continue;
             }
@@ -93,9 +96,6 @@ public class Game {
             //TODO: Check for checkmate and stalemate / king being captured
             //make it the other player's move
             whiteToMove = !whiteToMove;
-
-            // this just here to prevent infinite loops for now
-            break;
         }
     }
 
@@ -171,5 +171,23 @@ public class Game {
             System.out.print(players[1].getName());
         }
         System.out.println(" wins!");
+    }
+
+    /**
+     * Inputs other than normal moves
+     */
+    public enum otherInputs {
+        OFFER_DRAW,
+        RESIGN,
+        UNDO,
+        REDO
+    }
+
+    /**
+     * lets outside classes access ordinals for this enum
+     * @return the ordinal of the enumerated constant
+     */
+    public int getOrdinal(otherInputs e) {
+        return e.ordinal();
     }
 }
