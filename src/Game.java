@@ -34,7 +34,15 @@ public class Game {
      */
     public void play() {
         //TODO: implement
+        while(true) {
+            //get input
+            //test if it is legal
+            //play it
+            whiteToMove = !whiteToMove;
 
+            // this just here to prevent infinite loops for now
+            break;
+        }
     }
 
     /**
