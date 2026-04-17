@@ -30,13 +30,24 @@ public class Game {
      */
     public Game() {
         players = new Player[2];
+        undoStack.push(new Board());
     }
 
     /**
      * Plays a game. Gets player's moves and plays them in a loop until the game ends
      */
     public void play() {
-        //TODO: display starting info
+        System.out.println("Welcome to Chess!");
+        System.out.print("Please enter a name for Player 1 (white): ");
+        players[0] = new Player(new Scanner(System.in).nextLine());
+        System.out.print("Please enter a name for Player 2 (black): ");
+        players[1] = new Player(new Scanner(System.in).nextLine());
+        System.out.println("Each turn, the player will be asked to input a move in the format of two coordinates\n" +
+                "E.G. \"a2 a4\" or \"a2 to a4\" to move white's a pawn two spaces\n" +
+                "Also note that instead of taking a move, you may type \"offer draw\", \"resign\", \"undo\", or \"redo\"\n" +
+                "to trigger the respective action.");
+        System.out.println("Enjoy the game!");
+
         Player currentPlayer = players[0];
         while(true) {
             //Print board

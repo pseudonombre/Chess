@@ -10,14 +10,16 @@ public class Player {
     private String name;
 
     /**
-     * Sets the player's name to the input string
-     */
-    public void setName(String c_name) {name = c_name;}
-
-    /**
      * @return the player's name
      */
     public String getName() {return name;}
+
+    /**
+     * Creates a new player
+     */
+    public Player(String c_name) {
+        name = c_name;
+    }
 
     /**
      * Asks the user for input to determine their move. Input will be accepted in the form a2 a4 for moving the piece
