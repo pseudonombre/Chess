@@ -1,6 +1,9 @@
 import Move.Move;
 import Piece.*;
 
+import java.util.Arrays;
+import java.util.Stack;
+
 /**
  * Represents a board. holds pieces and manages whether movement is possible
  */
@@ -136,6 +139,10 @@ public class Board {
      * @param from where the move is from
      */
     public void makeMove(Move move, int[] from) {
-        //TODO: implement
+        int[] destination = from.clone();
+        destination[0] += move.getDestination()[0];
+        destination[1] += move.getDestination()[1];
+        pieces[destination[0]][destination[1]] = pieces[from[0]][from[1]];
+        pieces[from[0]][from[1]] = null;
     }
 }
