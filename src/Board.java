@@ -21,49 +21,49 @@ public class Board {
                 new Pawn(false),
                 new Rook(false)
         };
-        this.pieces[0] = new Piece[] {
+        this.pieces[1] = new Piece[] {
                 new Knight(true),
                 new Pawn(true),
                 null, null, null, null,
                 new Pawn(false),
                 new Knight(false)
         };
-        this.pieces[0] = new Piece[] {
+        this.pieces[2] = new Piece[] {
                 new Bishop(true),
                 new Pawn(true),
                 null, null, null, null,
                 new Pawn(false),
                 new Bishop(false)
         };
-        this.pieces[0] = new Piece[] {
+        this.pieces[3] = new Piece[] {
                 new Queen(true),
                 new Pawn(true),
                 null, null, null, null,
                 new Pawn(false),
                 new Queen(false)
         };
-        this.pieces[0] = new Piece[] {
+        this.pieces[4] = new Piece[] {
                 new King(true),
                 new Pawn(true),
                 null, null, null, null,
                 new Pawn(false),
                 new King(false)
         };
-        this.pieces[0] = new Piece[] {
+        this.pieces[5] = new Piece[] {
                 new Bishop(true),
                 new Pawn(true),
                 null, null, null, null,
                 new Pawn(false),
                 new Bishop(false)
         };
-        this.pieces[0] = new Piece[] {
+        this.pieces[6] = new Piece[] {
                 new Knight(true),
                 new Pawn(true),
                 null, null, null, null,
                 new Pawn(false),
                 new Knight(false)
         };
-        this.pieces[0] = new Piece[] {
+        this.pieces[7] = new Piece[] {
                 new Rook(true),
                 new Pawn(true),
                 null, null, null, null,
@@ -84,8 +84,28 @@ public class Board {
      * @return a string representation of the board
      */
     public String getString() {
-        //TODO: implement
-        return null;
+        StringBuilder[] sBArray = new StringBuilder[8];
+        for (int i = 0; i < 8; i++) {
+            sBArray[i] = new StringBuilder();
+        }
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (pieces[i][j] == null) {
+                    sBArray[j].append(" ");
+                }
+                else {
+                    sBArray[j].append(pieces[i][j].getPrintCharacter());
+                }
+            }
+        }
+        StringBuilder fillSpaces = new StringBuilder();
+        fillSpaces.append("=========================\n");
+        for (int i = 0; i < 8; i++) {
+            fillSpaces.append(sBArray[i].toString());
+            fillSpaces.append("\n");
+        }
+        fillSpaces.append("=========================\n");
+        return fillSpaces.toString();
     }
 
     /**
