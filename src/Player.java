@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  * Represents one player in the game. Gets the player's input.
  */
@@ -24,7 +26,20 @@ public class Player {
      * for white moving their a2 pawn to a4.
      */
     public int[][] getMove(){
-        //TODO: implement
-        return new int[0][];
+        System.out.print("Enter input in the format of two coordinates\n" +
+                "E.G. \"a2 a4\" or \"a2 to a4\" to move white's a pawn two spaces: ");
+        String input = new Scanner(System.in).nextLine();
+        input = input.strip();
+
+        int[][] ret = new int[2][2];
+        ret[0][0] = input.charAt(0) - 'a';
+        ret[0][1] = input.charAt(1) - '1';
+
+        input = input.substring(input.length() - 2);
+
+        ret[1][0] = input.charAt(0) - 'a';
+        ret[1][1] = input.charAt(1) - '1';
+
+        return ret;
     }
 }
