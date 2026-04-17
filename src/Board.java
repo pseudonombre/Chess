@@ -74,10 +74,10 @@ public class Board {
 
     /**
      * Creates a new board with the same piece configuration
-     * @param c_pieces the configuration to put the new board in
+     * @param other the board to copy
      */
-    public Board(Piece[][] c_pieces){
-        //TODO: implement
+    public Board(Board other){
+        pieces = other.pieces;
     }
 
     /**
@@ -122,13 +122,12 @@ public class Board {
      *     getting if the piece would be able to move there on an empty board (call Piece.getMove),
      *     getting the squares that must be empty (call Piece.getMove) and checking if they are empty
      *     and the moving player's king is not in check
-     * @param move the move to check the possibility of
-     * @param from where the move is from
-     * @return true if the move is legal according to the rules of chess
+     * @param coords an array of coordinates. coords[0] is the beginning position and coords[1] is the ending position.
+     * @return The Move if the move is possible, null if not
      */
-    public boolean isPossible(Move move, int[] from) {
-        //TODO: implement
-        return false;
+    public Move getMove(int[][] coords) {
+        int[] delta = new int[] {coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]};
+        return pieces[coords[0][0]][coords[0][1]].getMove(delta);
     }
 
     /**
