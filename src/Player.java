@@ -26,7 +26,7 @@ public class Player {
      * for white moving their a2 pawn to a4.
      */
     public int[][] getMove(){
-        System.out.print("Enter input in the format of two coordinates\n" +
+        System.out.print(name + ": enter input in the format of two coordinates\n" +
                 "E.G. \"a2 a4\" or \"a2 to a4\" to move white's a pawn two spaces: ");
         String input = new Scanner(System.in).nextLine();
         input = input.strip();
