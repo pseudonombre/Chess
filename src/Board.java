@@ -132,7 +132,7 @@ public class Board {
     }
 
     /**
-     * Makes the given move after checking if it is possible.
+     * Makes the given move.
      * @param move the move to make
      * @param from where the move is from
      */
