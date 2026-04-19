@@ -138,9 +138,13 @@ public class Board {
      *     getting the squares that must be empty (call Piece.getMove) and checking if they are empty
      *     and the moving player's king is not in check
      * @param coords an array of coordinates. coords[0] is the beginning position and coords[1] is the ending position.
+     * @param isWhite whether the move is supposed to move a white piece or black one
      * @return The Move if the move is possible, null if not
      */
-    public Move getMove(int[][] coords) {
+    public Move getMove(int[][] coords, boolean isWhite) {
+        if(pieces[coords[0][0]][coords[0][1]].getIsWhite() != isWhite) {
+            return null;
+        }
         int[] delta = new int[] {coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]};
         Move ret = pieces[coords[0][0]][coords[0][1]].getMove(delta);
         if(ret == null) { return null; }

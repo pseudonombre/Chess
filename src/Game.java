@@ -85,7 +85,7 @@ public class Game {
                 }
             }
             //System.out.println(Arrays.toString(currentInput[0]) + Arrays.toString(currentInput[1]));
-            Move currentMove = undoStack.peek().getMove(currentInput);
+            Move currentMove = undoStack.peek().getMove(currentInput, whiteToMove);
             //test if it is legal
             if(currentMove == null) {
                 System.out.println("Illegal move");
