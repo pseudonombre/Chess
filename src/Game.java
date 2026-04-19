@@ -1,5 +1,6 @@
 import Move.Move;
 
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -83,6 +84,7 @@ public class Game {
                         throw new IllegalArgumentException("Player.getMove() returned [" + currentInput[0] + "]");
                 }
             }
+            //System.out.println(Arrays.toString(currentInput[0]) + Arrays.toString(currentInput[1]));
             Move currentMove = undoStack.peek().getMove(currentInput);
             //test if it is legal
             if(currentMove == null) {

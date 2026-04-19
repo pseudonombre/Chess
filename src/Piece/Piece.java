@@ -4,6 +4,7 @@ import Move.Move;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Abstract piece class to model individual piece classes after. Importantly, pieces are not responsible for their
@@ -45,7 +46,7 @@ public abstract class Piece {
     public Move getMove(int[] destination) {
         ArrayList<Move> moveList = getPossMoves();
         for(Move m : moveList) {
-            if(m.getDestination() == destination) {
+            if(Arrays.equals(m.getDestination(),destination)) {
                 return m;
             }
         }

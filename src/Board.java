@@ -142,7 +142,14 @@ public class Board {
      */
     public Move getMove(int[][] coords) {
         int[] delta = new int[] {coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]};
-        return pieces[coords[0][0]][coords[0][1]].getMove(delta);
+        Move ret = pieces[coords[0][0]][coords[0][1]].getMove(delta);
+        if(ret == null) { return null; }
+        for(int[] pathSpace : ret.getPath()) {
+            if(pieces[pathSpace[0]][pathSpace[1]] != null) {
+                return null;
+            }
+        }
+        return ret;
     }
 
     /**
@@ -151,7 +158,7 @@ public class Board {
      * @param from where the move is from
      */
     public void makeMove(Move move, int[] from) {
-        //System.out.println(move.toString());
+//        System.out.println(move.toString());
         int[] destination = from.clone();
         destination[0] += move.getDestination()[0];
         destination[1] += move.getDestination()[1];
