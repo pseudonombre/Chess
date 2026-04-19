@@ -26,7 +26,13 @@ public abstract class Piece {
     /**
      * @return The character to print for this piece when displaying the board
      */
-    public char getPrintCharacter(){return printCharacter;}
+    public char getPrintCharacter(){
+        if(isWhite){
+            return Character.toUpperCase(printCharacter);
+        } else {
+            return Character.toLowerCase(printCharacter);
+        }
+    }
 
     /**
      * Creates a new piece
