@@ -14,6 +14,16 @@ public class Board {
     private Piece[][] pieces = new Piece[8][8];
 
     /**
+     * holds white king's position to streamline kingInCheck
+     */
+    private int[] whiteKingCoords;
+
+    /**
+     * holds black king's position to streamline kingInCheck
+     */
+    private int[] blackKingCoords;
+
+    /**
      * Creates a new board with the standard chess starting position
      */
     public Board(){
@@ -73,6 +83,8 @@ public class Board {
                 new Pawn(false),
                 new Rook(false)
         };
+        whiteKingCoords = new int[] {4,0};
+        blackKingCoords = new int[] {4,7};
     }
 
     /**
@@ -139,9 +151,20 @@ public class Board {
      * @param from where the move is from
      */
     public void makeMove(Move move, int[] from) {
+        //System.out.println(move.toString());
         int[] destination = from.clone();
         destination[0] += move.getDestination()[0];
         destination[1] += move.getDestination()[1];
+//        if(pieces[from[0]][from[1]] == null) {
+//            System.out.println("nothing in \"from\"");
+//        } else {
+//            System.out.println("contents of from: " + pieces[from[0]][from[1]].getClass());
+//        }
+//        if(pieces[destination[0]][destination[1]] == null) {
+//            System.out.println("nothing in \"dest\"");
+//        } else {
+//            System.out.println("contents of dest: " + pieces[destination[0]][destination[1]].getClass());
+//        }
         pieces[destination[0]][destination[1]] = pieces[from[0]][from[1]];
         pieces[from[0]][from[1]] = null;
     }

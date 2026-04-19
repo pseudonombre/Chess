@@ -1,6 +1,7 @@
 package Move;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Utility to hold information about a move. Relative to [0,0].
@@ -24,6 +25,24 @@ public class Move {
      * @return The spaces which must be empty for the move to be legal. Relative to [0,0].
      */
     public ArrayList<int[]> getPath() { return path; }
+
+    /**
+     * Tostring method for debugging
+     * @return a string representing the destination, path, and captureStatus of the move.
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Start Move string ==============================\n");
+        sb.append("destination: " + Arrays.toString(destination));
+        sb.append("\npath:\n");
+        for(int[] a: path) {
+          sb.append(Arrays.toString(a) + "\n");
+        }
+        sb.append("captureStatus: " + captureStatus);
+        sb.append("\nEnd Move string ==============================");
+        return sb.toString();
+    }
 
     /**
      * Possible capture statuses
