@@ -44,11 +44,13 @@ public class Player {
         }
 
         int[][] ret = new int[2][2];
+        if(input.length() < 2) { return null; }
         ret[0][0] = getFile(input.charAt(0));
         ret[0][1] = getRank(input.charAt(1));
 
         input = input.substring(input.length() - 2);
 
+        if(input.length() < 2) { return null; }
         ret[1][0] = getFile(input.charAt(0));
         ret[1][1] = getRank(input.charAt(1));
 
