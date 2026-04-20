@@ -188,7 +188,7 @@ public class Board {
         char diffColorFill = '■';
         StringBuilder sb = new StringBuilder();
         // set text color based on color of square
-        if((row + column) % 2 == 0) {
+        if((row + column) % 2 == 1) {
             sb.append(ANSI_WHITE_BACKGROUND_BLACK_TEXT);
         } else {
             sb.append(ANSI_BLACK_BACKGROUND_WHITE_TEXT);
