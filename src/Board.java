@@ -3,6 +3,7 @@ import Piece.*;
 
 import java.util.Arrays;
 import java.util.Stack;
+import java.util.WeakHashMap;
 
 /**
  * Represents a board. holds pieces and manages whether movement is possible
@@ -137,64 +138,78 @@ public class Board {
         //int cellHeight = 1;
         StringBuilder ret = new StringBuilder();
         ret.append(ANSI_RESET);
-        ret.append(getHeaderString(cellWidth));
+        ret.append(getHeaderString(cellWidth, whiteOnBottom));
         ret.append("\n");
         ret.append(getSpacerString(cellWidth));
         ret.append("\n");
         if(whiteOnBottom){
             for (int i = 7; i >= 0; i--) {
-                ret.append(getRowString(i, cellWidth));
+                ret.append(getRowString(i, cellWidth, whiteOnBottom));
                 ret.append("\n");
             }
         } else {
             for (int i = 0; i <= 7; i++) {
-                ret.append(getRowString(i, cellWidth));
+                ret.append(getRowString(i, cellWidth, whiteOnBottom));
                 ret.append("\n");
             }
         }
         ret.append(getSpacerString(cellWidth));
         ret.append("\n");
-        ret.append(getHeaderString(cellWidth));
+        ret.append(getHeaderString(cellWidth, whiteOnBottom));
         ret.append("\n");
         return ret.toString();
     }
 
-    private String getRowString(int row, int cellWidth) {
+    private String getRowString(int row, int cellWidth, boolean whiteOnBottom) {
         char border = '‖';
-        char sameColorFill = '□';
-        char diffColorFill = '■';
         StringBuilder sb = new StringBuilder();
         sb.append(row + 1);
         sb.append(border);
         sb.append(ANSI_WHITE_BACKGROUND_BLACK_TEXT);
-        for (int i = 0; i < 8; i++) {
-            // set text color based on color of square
-            if((row + i) % 2 == 0) {
-                sb.append(ANSI_WHITE_BACKGROUND_BLACK_TEXT);
-            } else {
-                sb.append(ANSI_BLACK_BACKGROUND_WHITE_TEXT);
+        if (whiteOnBottom){
+            for (int i = 0; i < 8; i++) {
+                sb.append(getCellString(row, i, cellWidth));
             }
-
-            // add all spaces if no piece present
-            if (pieces[i][row] == null) {
-                sb.repeat(' ', cellWidth);
-                continue;
-            }
-
-            // place appropriate characters around piece depending on if it is the same color as its square
-            if ( pieces[i][row].getIsWhite() == ((row + i) % 2 == 0) ) {
-                sb.repeat(sameColorFill, (cellWidth - 1) / 2);
-                sb.append(pieces[i][row].getPrintCharacter());
-                sb.repeat(sameColorFill, cellWidth / 2);
-            } else {
-                sb.repeat(diffColorFill, (cellWidth - 1) / 2);
-                sb.append(pieces[i][row].getPrintCharacter());
-                sb.repeat(diffColorFill, cellWidth / 2);
+        } else {
+            for (int i = 7; i > -1; i--) {
+                sb.append(getCellString(row, i, cellWidth));
             }
         }
+
         sb.append(ANSI_RESET);
         sb.append(border);
         sb.append(row + 1);
+
+        return sb.toString();
+    }
+
+    private String getCellString(int row, int column, int cellWidth) {
+        char sameColorFill = '□';
+        char diffColorFill = '■';
+        StringBuilder sb = new StringBuilder();
+        // set text color based on color of square
+        if((row + column) % 2 == 0) {
+            sb.append(ANSI_WHITE_BACKGROUND_BLACK_TEXT);
+        } else {
+            sb.append(ANSI_BLACK_BACKGROUND_WHITE_TEXT);
+        }
+
+        // add all spaces if no piece present
+        if (pieces[column][row] == null) {
+            sb.repeat(' ', cellWidth);
+            return sb.toString();
+        }
+
+        // place appropriate characters around piece depending on if it is the same color as its square
+        if ( pieces[column][row].getIsWhite() == ((row + column) % 2 == 0) ) {
+            sb.repeat(sameColorFill, (cellWidth - 1) / 2);
+            sb.append(pieces[column][row].getPrintCharacter());
+            sb.repeat(sameColorFill, cellWidth / 2);
+        } else {
+            sb.repeat(diffColorFill, (cellWidth - 1) / 2);
+            sb.append(pieces[column][row].getPrintCharacter());
+            sb.repeat(diffColorFill, cellWidth / 2);
+        }
 
         return sb.toString();
     }
@@ -204,20 +219,26 @@ public class Board {
      * @param cellWidth Width oc cells in the board
      * @return a header to label the files of the board
      */
-    private String getHeaderString(int cellWidth) {
+    private String getHeaderString(int cellWidth, boolean whiteOnBottom) {
         char border = '‖';
         String headerChars = "ABCDEFGH";
         StringBuilder sb = new StringBuilder();
         sb.append(' ');
         sb.append(border);
-        for (int i = 0; i < 7; i++) {
-            sb.repeat(' ', (cellWidth - 1) / 2);
-            sb.append(headerChars.charAt(i));
-            sb.repeat(' ', cellWidth / 2);
+        if(whiteOnBottom){
+            for (int i = 0; i < 8; i++) {
+                sb.repeat(' ', (cellWidth - 1) / 2);
+                sb.append(headerChars.charAt(i));
+                sb.repeat(' ', cellWidth / 2);
+            }
+        } else {
+            for (int i = 7; i > -1; i--) {
+                sb.repeat(' ', (cellWidth - 1) / 2);
+                sb.append(headerChars.charAt(i));
+                sb.repeat(' ', cellWidth / 2);
+            }
         }
-        sb.repeat(' ', (cellWidth - 1) / 2);
-        sb.append(headerChars.charAt(7));
-        sb.repeat(' ', cellWidth / 2);
+
         sb.append(border);
         return sb.toString();
     }
@@ -260,27 +281,33 @@ public class Board {
      * @param isWhite whether the move is supposed to move a white piece or black one
      * @return The Move if the move is possible, null if not
      */
-    public Move getMove(int[][] coords, boolean isWhite) {
+    public Move getMove(int[][] coords, boolean isWhite) throws IllegalArgumentException {
         //TODO: Tell caller why move is illegal (probably just throw illegal argument exceptions with different
         // text to pass on to the user
         if(pieces[coords[0][0]][coords[0][1]].getIsWhite() != isWhite) {
-            return null;
+            throw new IllegalArgumentException("Moving an opponent's piece is not allowed.");
         }
         int[] delta = new int[] {coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]};
         Move ret = pieces[coords[0][0]][coords[0][1]].getMove(delta);
-        if(ret == null) { return null; }
+        if(ret == null) { throw new IllegalArgumentException("That piece cannot move in that shape."); }
         for(int[] pathSpace : ret.getPath()) {
             if(pieces[pathSpace[0]][pathSpace[1]] != null) {
-                return null;
+                throw new IllegalArgumentException("There are pieces in the way of that move.");
             }
         }
-        Piece destinationPiece = pieces[ret.getDestination()[0]][ret.getDestination()[1]];
+        Piece destinationPiece = pieces[coords[1][0]][coords[1][1]];
         if (destinationPiece == null) {
-            if(ret.getCaptureStatus() == Move.CaptureStatus.MUST_CAPTURE) { return null; }
+            if(ret.getCaptureStatus() == Move.CaptureStatus.MUST_CAPTURE) {
+                throw new IllegalArgumentException("That move must capture, but there is nothing to capture.");
+            }
             return ret;
         }
-        if (ret.getCaptureStatus() == Move.CaptureStatus.CANNOT_CAPTURE) { return null; }
-        if (destinationPiece.getIsWhite() == isWhite) { return null; }
+        if (ret.getCaptureStatus() == Move.CaptureStatus.CANNOT_CAPTURE) {
+            throw new IllegalArgumentException("That move cannot capture, and there is a piece on the destination square.");
+        }
+        if (destinationPiece.getIsWhite() == isWhite) {
+            throw new IllegalArgumentException("You can't capture your own pieces.");
+        }
         return ret;
     }
 

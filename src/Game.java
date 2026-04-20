@@ -1,5 +1,6 @@
 import Move.Move;
 
+import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Stack;
@@ -85,12 +86,18 @@ public class Game {
                 }
             }
             //System.out.println(Arrays.toString(currentInput[0]) + Arrays.toString(currentInput[1]));
-            Move currentMove = undoStack.peek().getMove(currentInput, whiteToMove);
-            //test if it is legal
-            if(currentMove == null) {
-                System.out.println("Illegal move");
+            Move currentMove;
+            try {
+                currentMove = undoStack.peek().getMove(currentInput, whiteToMove);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e);
                 continue;
             }
+//            //test if it is legal
+//            if(currentMove == null) {
+//                System.out.println("Illegal move");
+//                continue;
+//            }
             //play it
             undoStack.push(new Board(undoStack.peek()));
             undoStack.peek().makeMove(currentMove, currentInput[0]);
