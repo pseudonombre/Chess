@@ -98,7 +98,7 @@ public class Board {
     /**
      * @return a string representation of the board
      */
-    public String getString() {
+    public String getStringOld() {
         StringBuilder[] sBArray = new StringBuilder[8];
         for (int i = 0; i < 8; i++) {
             sBArray[i] = new StringBuilder();
@@ -123,6 +123,125 @@ public class Board {
         return fillSpaces.toString();
     }
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK_BACKGROUND_WHITE_TEXT = "\u001B[40m\u001B[37m";
+    public static final String ANSI_WHITE_BACKGROUND_BLACK_TEXT = "\u001B[47m\u001B[30m";
+
+    /**
+     * @return a string representation of the board
+     */
+    public String getString(boolean whiteOnBottom) {
+        int cellWidth = 3;
+        /* It might be nice to add variable cell heights. By cursory inspection, only getRowString() would need changes.
+        Until then, cell height is always 1. */
+        //int cellHeight = 1;
+        StringBuilder ret = new StringBuilder();
+        ret.append(ANSI_RESET);
+        ret.append(getHeaderString(cellWidth));
+        ret.append("\n");
+        ret.append(getSpacerString(cellWidth));
+        ret.append("\n");
+        if(whiteOnBottom){
+            for (int i = 7; i >= 0; i--) {
+                ret.append(getRowString(i, cellWidth));
+                ret.append("\n");
+            }
+        } else {
+            for (int i = 0; i <= 7; i++) {
+                ret.append(getRowString(i, cellWidth));
+                ret.append("\n");
+            }
+        }
+        ret.append(getSpacerString(cellWidth));
+        ret.append("\n");
+        ret.append(getHeaderString(cellWidth));
+        ret.append("\n");
+        return ret.toString();
+    }
+
+    private String getRowString(int row, int cellWidth) {
+        char border = '‖';
+        char sameColorFill = '□';
+        char diffColorFill = '■';
+        StringBuilder sb = new StringBuilder();
+        sb.append(row + 1);
+        sb.append(border);
+        sb.append(ANSI_WHITE_BACKGROUND_BLACK_TEXT);
+        for (int i = 0; i < 8; i++) {
+            // set text color based on color of square
+            if((row + i) % 2 == 0) {
+                sb.append(ANSI_WHITE_BACKGROUND_BLACK_TEXT);
+            } else {
+                sb.append(ANSI_BLACK_BACKGROUND_WHITE_TEXT);
+            }
+
+            // add all spaces if no piece present
+            if (pieces[i][row] == null) {
+                sb.repeat(' ', cellWidth);
+                continue;
+            }
+
+            // place appropriate characters around piece depending on if it is the same color as its square
+            if ( pieces[i][row].getIsWhite() == ((row + i) % 2 == 0) ) {
+                sb.repeat(sameColorFill, (cellWidth - 1) / 2);
+                sb.append(pieces[i][row].getPrintCharacter());
+                sb.repeat(sameColorFill, cellWidth / 2);
+            } else {
+                sb.repeat(diffColorFill, (cellWidth - 1) / 2);
+                sb.append(pieces[i][row].getPrintCharacter());
+                sb.repeat(diffColorFill, cellWidth / 2);
+            }
+        }
+        sb.append(ANSI_RESET);
+        sb.append(border);
+        sb.append(row + 1);
+
+        return sb.toString();
+    }
+
+    /**
+     * Gets a header to label the files of the board
+     * @param cellWidth Width oc cells in the board
+     * @return a header to label the files of the board
+     */
+    private String getHeaderString(int cellWidth) {
+        char border = '‖';
+        String headerChars = "ABCDEFGH";
+        StringBuilder sb = new StringBuilder();
+        sb.append(' ');
+        sb.append(border);
+        for (int i = 0; i < 7; i++) {
+            sb.repeat(' ', (cellWidth - 1) / 2);
+            sb.append(headerChars.charAt(i));
+            sb.repeat(' ', cellWidth / 2);
+        }
+        sb.repeat(' ', (cellWidth - 1) / 2);
+        sb.append(headerChars.charAt(7));
+        sb.repeat(' ', cellWidth / 2);
+        sb.append(border);
+        return sb.toString();
+    }
+
+    /**
+     * Get spacer above or below the board
+     * @param cellWidth Width of board cells
+     * @return spacer string
+     */
+    private String getSpacerString(int cellWidth) {
+        char vertDivider = '=';
+        char cornerDivider = '#';
+        StringBuilder sb = new StringBuilder();
+        sb.append(vertDivider);
+        sb.append(cornerDivider);
+        for (int i = 0; i < 8; i++) {
+            sb.repeat(vertDivider, cellWidth);
+        }
+        sb.append(ANSI_RESET);
+        sb.append(cornerDivider);
+        sb.append(vertDivider);
+        return sb.toString();
+    }
+
     /**
      * @param white true if the request is whether the white king is in check, false otherwise
      * @return true if the king of the correct color is in check
@@ -142,6 +261,8 @@ public class Board {
      * @return The Move if the move is possible, null if not
      */
     public Move getMove(int[][] coords, boolean isWhite) {
+        //TODO: Tell caller why move is illegal (probably just throw illegal argument exceptions with different
+        // text to pass on to the user
         if(pieces[coords[0][0]][coords[0][1]].getIsWhite() != isWhite) {
             return null;
         }

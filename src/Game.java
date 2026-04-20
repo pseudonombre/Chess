@@ -52,7 +52,7 @@ public class Game {
         Player currentPlayer = players[0];
         while(true) {
             //Print board
-            System.out.println(undoStack.peek().getString());
+            System.out.println(undoStack.peek().getString(whiteToMove));
             //get input
             int[][] currentInput = getInput();
             //currentInput is null if the player entered something invalid

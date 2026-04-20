@@ -27,11 +27,14 @@ public abstract class Piece {
      * @return The character to print for this piece when displaying the board
      */
     public char getPrintCharacter(){
-        if(isWhite){
-            return Character.toUpperCase(printCharacter);
-        } else {
-            return Character.toLowerCase(printCharacter);
-        }
+        return printCharacter;
+        // the below was written before Board.getString handled piece colors and is kept
+        // for reference in case changes are made.
+//        if(isWhite){
+//            return Character.toUpperCase(printCharacter);
+//        } else {
+//            return Character.toLowerCase(printCharacter);
+//        }
     }
 
     /**
