@@ -108,7 +108,7 @@ public abstract class Piece {
         if(limit < 1) { throw new IllegalArgumentException(); }
 
         ArrayList<Move> ret = new ArrayList<Move>();
-        for (int i = 1; i < limit; i++) {
+        for (int i = 1; i <= limit; i++) {
             ret.add(generateDirectionalMove(direction, i, captureStatus));
         }
         return ret;
