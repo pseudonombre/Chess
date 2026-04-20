@@ -153,6 +153,13 @@ public class Board {
                 return null;
             }
         }
+        Piece destinationPiece = pieces[ret.getDestination()[0]][ret.getDestination()[1]];
+        if (destinationPiece == null) {
+            if(ret.getCaptureStatus() == Move.CaptureStatus.MUST_CAPTURE) { return null; }
+            return ret;
+        }
+        if (ret.getCaptureStatus() == Move.CaptureStatus.CANNOT_CAPTURE) { return null; }
+        if (destinationPiece.getIsWhite() == isWhite) { return null; }
         return ret;
     }
 
