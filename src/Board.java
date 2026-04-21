@@ -186,7 +186,7 @@ public class Board {
         }
 
         // place appropriate characters around piece depending on if it is the same color as its square
-        if ( pieces[column][row].getIsWhite() == ((row + column) % 2 == 0) ) {
+        if ( pieces[column][row].getIsWhite() == ((row + column) % 2 == 1) ) {
             sb.repeat(sameColorFill, (cellWidth - 1) / 2);
             sb.append(pieces[column][row].getPrintCharacter());
             sb.repeat(sameColorFill, cellWidth / 2);
