@@ -269,12 +269,19 @@ public class Board {
     public Move getMove(int[][] coords, boolean isWhite) throws IllegalArgumentException {
         //TODO: Tell caller why move is illegal (probably just throw illegal argument exceptions with different
         // text to pass on to the user
+        if(pieces[coords[0][0]][coords[0][1]] == null) {
+            throw new IllegalArgumentException("There is not a piece on the starting square.");
+        }
         if(pieces[coords[0][0]][coords[0][1]].getIsWhite() != isWhite) {
             throw new IllegalArgumentException("Moving an opponent's piece is not allowed.");
         }
         int[] delta = new int[] {coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]};
         Move ret = pieces[coords[0][0]][coords[0][1]].getMove(delta);
-        if(ret == null) { throw new IllegalArgumentException("That piece cannot move in that shape."); }
+        if(ret == null) { throw new IllegalArgumentException(
+                String.format("\"%s\" cannot move in that shape: \"%s\"", //\nIt moves in shapes: \"%s\".",
+                        pieces[coords[0][0]][coords[0][1]].getClass(),
+                        Arrays.toString(delta))); }
+                        //pieces[coords[0][0]][coords[0][1]].getPossMoves())); }
         for(int[] pathSpace : ret.getPath()) {
             if(pieces[pathSpace[0]][pathSpace[1]] != null) {
                 throw new IllegalArgumentException("There are pieces in the way of that move.");

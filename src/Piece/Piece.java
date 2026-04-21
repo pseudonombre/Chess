@@ -113,4 +113,21 @@ public abstract class Piece {
         }
         return ret;
     }
+
+    public static ArrayList<Move> reverseMoves(ArrayList<Move> moves) {
+        ArrayList<Move> ret = new ArrayList<>();
+        for(Move move : moves){
+            int[] newDestination = move.getDestination().clone();
+            newDestination[1] *= -1;
+            ArrayList<int[]> oldPath = move.getPath();
+            ArrayList<int[]> newPath = new ArrayList<>();
+            for(int[] space : oldPath) {
+                int[] newSpace = space.clone();
+                newSpace[1] *= -1;
+                newPath.add(newSpace);
+            }
+            ret.add(new Move(newDestination, newPath, move.getCaptureStatus()));
+        }
+        return ret;
+    }
 }
