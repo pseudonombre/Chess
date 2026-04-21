@@ -96,40 +96,13 @@ public class Board {
         pieces = other.pieces;
     }
 
-    /**
-     * @return a string representation of the board
-     */
-    public String getStringOld() {
-        StringBuilder[] sBArray = new StringBuilder[8];
-        for (int i = 0; i < 8; i++) {
-            sBArray[i] = new StringBuilder();
-        }
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (pieces[i][j] == null) {
-                    sBArray[j].append(" ");
-                }
-                else {
-                    sBArray[j].append(pieces[i][j].getPrintCharacter());
-                }
-            }
-        }
-        StringBuilder fillSpaces = new StringBuilder();
-        fillSpaces.append("=========================\n");
-        for (int i = 0; i < 8; i++) {
-            fillSpaces.append(sBArray[i].toString());
-            fillSpaces.append("\n");
-        }
-        fillSpaces.append("=========================\n");
-        return fillSpaces.toString();
-    }
-
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK_BACKGROUND_WHITE_TEXT = "\u001B[40m\u001B[37m";
     public static final String ANSI_WHITE_BACKGROUND_BLACK_TEXT = "\u001B[47m\u001B[30m";
 
     /**
      * @return a string representation of the board
+     * @param whiteOnBottom true if white starting ranks on bottom, false otherwise
      */
     public String getString(boolean whiteOnBottom) {
         int cellWidth = 3;
@@ -160,6 +133,12 @@ public class Board {
         return ret.toString();
     }
 
+    /**
+     * @param row row to get a string representation of
+     * @param cellWidth display width of a cell
+     * @param whiteOnBottom true if white starting ranks on bottom, false otherwise
+     * @return a string representation of one row
+     */
     private String getRowString(int row, int cellWidth, boolean whiteOnBottom) {
         char border = '‖';
         StringBuilder sb = new StringBuilder();
@@ -183,6 +162,12 @@ public class Board {
         return sb.toString();
     }
 
+    /**
+     * @param row row of desired square
+     * @param column column of desired square
+     * @param cellWidth display width of cell
+     * @return a string representation of a single square
+     */
     private String getCellString(int row, int column, int cellWidth) {
         char sameColorFill = '□';
         char diffColorFill = '■';
