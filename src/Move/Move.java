@@ -33,14 +33,14 @@ public class Move {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Start Move string ==============================\n");
+        sb.append("Start Move string\n");
         sb.append("destination: " + Arrays.toString(destination));
         sb.append("\npath:\n");
         for(int[] a: path) {
           sb.append(Arrays.toString(a) + "\n");
         }
         sb.append("captureStatus: " + captureStatus);
-        sb.append("\nEnd Move string ==============================");
+        sb.append("\nEnd Move string");
         return sb.toString();
     }
 
