@@ -69,7 +69,7 @@ public class Move {
      */
     public Move(int[] c_destination, ArrayList<int[]> c_path, CaptureStatus c_captureStatus) {
         destination = c_destination;
-        if(path == null){
+        if(c_path == null){
             path = new ArrayList<>();
         } else {
             path = c_path;
