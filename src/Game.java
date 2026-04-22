@@ -135,7 +135,7 @@ public class Game {
         System.out.println(playerOffered + ", do you accept the draw offer? (Y or N): ");
         String input = new Scanner(System.in).nextLine();
         input = input.strip().toLowerCase();
-        if(input == "y" || input == "yes") {
+        if(input.equals("y") || input.equals("yes")) {
             return true;
         }
         return false;
@@ -168,8 +168,10 @@ public class Game {
      * Displays end screen
      */
     private void endScreen(boolean whiteWins, boolean draw) {
+        System.out.println("=====================================");
         if(draw) {
             System.out.println("It's a draw!");
+            System.out.println("=====================================");
             return;
         }
         if(whiteWins) {
@@ -178,6 +180,7 @@ public class Game {
             System.out.print(players[1].getName());
         }
         System.out.println(" wins!");
+        System.out.println("=====================================");
     }
 
     /**

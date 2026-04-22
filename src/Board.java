@@ -267,8 +267,6 @@ public class Board {
      * @return The Move if the move is possible, null if not
      */
     public Move getMove(int[][] coords, boolean isWhite) throws IllegalArgumentException {
-        //TODO: Tell caller why move is illegal (probably just throw illegal argument exceptions with different
-        // text to pass on to the user
         if(pieces[coords[0][0]][coords[0][1]] == null) {
             throw new IllegalArgumentException("There is not a piece on the starting square.");
         }
