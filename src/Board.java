@@ -94,6 +94,8 @@ public class Board {
      */
     public Board(Board other){
         pieces = other.pieces;
+        whiteKingCoords = other.whiteKingCoords;
+        blackKingCoords = other.blackKingCoords;
     }
 
     public static final String ANSI_RESET = "\u001B[0m";
@@ -253,7 +255,94 @@ public class Board {
      * @return true if the king of the correct color is in check
      */
     public boolean kingInCheck(boolean white) {
-        //TODO: implement
+        int[] kingCoords;
+        if(white) {
+            kingCoords = whiteKingCoords;
+        } else {
+            kingCoords = blackKingCoords;
+        }
+        // check pawn spaces
+        for(Move move : new Pawn(white).getPossMoves()) {
+            if(move.getCaptureStatus() == Move.CaptureStatus.CANNOT_CAPTURE) { continue; }
+
+            // FOR ALL: check that destination is on board before checking if there's a piece there
+            if(outOfBounds(move.getDestination()[0] + kingCoords[0]) ||
+                    outOfBounds(move.getDestination()[1] + kingCoords[1])) {
+                continue;
+            }
+            Piece destinationPiece = pieces[move.getDestination()[0] + kingCoords[0]][move.getDestination()[1] + kingCoords[1]];
+            if(destinationPiece == null) { continue; }
+            if(destinationPiece.getClass() == Pawn.class) {
+                if(destinationPiece.getIsWhite() != white) {
+                    return true;
+                }
+            }
+        }
+        // check rook spaces
+        moveLoop:
+        for(Move move : new Rook(true).getPossMoves()) {
+            if(outOfBounds(move.getDestination()[0] + kingCoords[0]) ||
+                    outOfBounds(move.getDestination()[1] + kingCoords[1])) {
+                continue;
+            }
+            for(int[] pathSpace : move.getPath()) {
+                if(outOfBounds(pathSpace[0] + kingCoords[0]) ||
+                        outOfBounds(pathSpace[1] + kingCoords[1])) {
+                    continue moveLoop;
+                }
+                if(pieces[pathSpace[0] + kingCoords[0]][pathSpace[1] + kingCoords[1]] != null) { continue moveLoop; }
+            }
+            Piece destinationPiece = pieces[move.getDestination()[0] + kingCoords[0]][move.getDestination()[1] + kingCoords[1]];
+            if(destinationPiece == null) { continue; }
+            if(destinationPiece.getClass() == Rook.class || destinationPiece.getClass() == Queen.class) {
+                if(destinationPiece.getIsWhite() != white) {
+                    return true;
+                }
+            }
+        }
+        // check bishop spaces
+        moveLoop:
+        for(Move move : new Bishop(true).getPossMoves()) {
+            if(outOfBounds(move.getDestination()[0] + kingCoords[0]) ||
+                    outOfBounds(move.getDestination()[1] + kingCoords[1])) {
+                continue;
+            }
+            for(int[] pathSpace : move.getPath()) {
+                if(outOfBounds(pathSpace[0] + kingCoords[0]) ||
+                        outOfBounds(pathSpace[1] + kingCoords[1])) {
+                    continue moveLoop;
+                }
+                if(pieces[pathSpace[0] + kingCoords[0]][pathSpace[1] + kingCoords[1]] != null) { continue moveLoop; }
+            }
+            Piece destinationPiece = pieces[move.getDestination()[0] + kingCoords[0]][move.getDestination()[1] + kingCoords[1]];
+            if(destinationPiece == null) { continue; }
+            if(destinationPiece.getClass() == Bishop.class || destinationPiece.getClass() == Queen.class) {
+                if(destinationPiece.getIsWhite() != white) {
+                    return true;
+                }
+            }
+        }
+        // check knight spaces
+        for(Move move : new Knight(true).getPossMoves()) {
+            if(outOfBounds(move.getDestination()[0] + kingCoords[0]) ||
+                    outOfBounds(move.getDestination()[1] + kingCoords[1])) {
+                continue;
+            }
+            Piece destinationPiece = pieces[move.getDestination()[0] + kingCoords[0]][move.getDestination()[1] + kingCoords[1]];
+            if(destinationPiece == null) { continue; }
+            if(destinationPiece.getClass() == Knight.class) {
+                if(destinationPiece.getIsWhite() != white) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean outOfBounds(int check) {
+        if(check < 0 || check > 7) {
+            return true;
+        }
         return false;
     }
 
@@ -281,7 +370,7 @@ public class Board {
                         Arrays.toString(delta))); }
                         //pieces[coords[0][0]][coords[0][1]].getPossMoves())); }
         for(int[] pathSpace : ret.getPath()) {
-            if(pieces[pathSpace[0]][pathSpace[1]] != null) {
+            if(pieces[pathSpace[0] + coords[0][0]][pathSpace[1] + coords[0][1]] != null) {
                 throw new IllegalArgumentException("There are pieces in the way of that move.");
             }
         }
@@ -290,13 +379,18 @@ public class Board {
             if(ret.getCaptureStatus() == Move.CaptureStatus.MUST_CAPTURE) {
                 throw new IllegalArgumentException("That move must capture, but there is nothing to capture.");
             }
-            return ret;
+        } else {
+            if (ret.getCaptureStatus() == Move.CaptureStatus.CANNOT_CAPTURE) {
+                throw new IllegalArgumentException("That move cannot capture, and there is a piece on the destination square.");
+            }
+            if (destinationPiece.getIsWhite() == isWhite) {
+                throw new IllegalArgumentException("You can't capture your own pieces.");
+            }
         }
-        if (ret.getCaptureStatus() == Move.CaptureStatus.CANNOT_CAPTURE) {
-            throw new IllegalArgumentException("That move cannot capture, and there is a piece on the destination square.");
-        }
-        if (destinationPiece.getIsWhite() == isWhite) {
-            throw new IllegalArgumentException("You can't capture your own pieces.");
+        Board checkTestBoard = new Board(this);
+        checkTestBoard.makeMove(ret, coords[0]);
+        if(checkTestBoard.kingInCheck(pieces[coords[0][0]][coords[0][1]].getIsWhite())) {
+            throw new IllegalArgumentException("You can't end your turn in check.");
         }
         return ret;
     }
@@ -307,21 +401,20 @@ public class Board {
      * @param from where the move is from
      */
     public void makeMove(Move move, int[] from) {
-//        System.out.println(move.toString());
         int[] destination = from.clone();
+        if(pieces[from[0]][from[1]].getClass().equals(King.class)) {
+            if(pieces[from[0]][from[1]].getIsWhite()) {
+                whiteKingCoords[0] += move.getDestination()[0];
+                whiteKingCoords[1] += move.getDestination()[1];
+            } else {
+                blackKingCoords[0] += move.getDestination()[0];
+                blackKingCoords[1] += move.getDestination()[1];
+            }
+        }
         destination[0] += move.getDestination()[0];
         destination[1] += move.getDestination()[1];
-//        if(pieces[from[0]][from[1]] == null) {
-//            System.out.println("nothing in \"from\"");
-//        } else {
-//            System.out.println("contents of from: " + pieces[from[0]][from[1]].getClass());
-//        }
-//        if(pieces[destination[0]][destination[1]] == null) {
-//            System.out.println("nothing in \"dest\"");
-//        } else {
-//            System.out.println("contents of dest: " + pieces[destination[0]][destination[1]].getClass());
-//        }
         pieces[destination[0]][destination[1]] = pieces[from[0]][from[1]];
         pieces[from[0]][from[1]] = null;
+
     }
 }
