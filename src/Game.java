@@ -91,16 +91,20 @@ public class Game {
                 System.out.println(e);
                 continue;
             }
-//            //test if it is legal
-//            if(currentMove == null) {
-//                System.out.println("Illegal move");
-//                continue;
-//            }
             //play it
             undoStack.push(new Board(undoStack.peek()));
             undoStack.peek().makeMove(currentMove, currentInput[0]);
             redoStack.clear();
-            //TODO: Check for checkmate and stalemate / king being captured
+            // check for checkmate / stalemate
+            if(! undoStack.peek().hasLegalMoves( ! whiteToMove)) {
+                if(undoStack.peek().kingInCheck( ! whiteToMove)) {
+                    endScreen(whiteToMove, false);
+                    return;
+                } else {
+                   endScreen(false, true);
+                    return;
+                }
+            }
             //make it the other player's move
             whiteToMove = !whiteToMove;
         }

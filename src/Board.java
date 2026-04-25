@@ -432,15 +432,19 @@ public class Board {
                 if(pieces[i][j] != null) {
                     if(pieces[i][j].getIsWhite() == isWhite) {
                         for(Move move : pieces[i][j].getPossMoves()) {
-                            if (getMove(new int[][]{{i, j}, {i + move.getDestination()[0],
-                                    j + move.getDestination()[1]}}, isWhite) != null) {
-                                return false;
-                            }
+                            // no catch because an exception simply means the move is not possible and we can
+                            // just move on
+                            try {
+                                if (getMove(new int[][]{{i, j}, {i + move.getDestination()[0],
+                                        j + move.getDestination()[1]}}, isWhite) != null) {
+                                    return true;
+                                }
+                            } catch (Exception _) {}
                         }
                     }
                 }
             }
         }
-        return true;
+        return false;
     }
 }
