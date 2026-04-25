@@ -64,9 +64,9 @@ public abstract class Piece {
 
     /**
      * Gets a list of all possible  relative to [0,0]. Generates the list only if possMoves has not been filled.
-     *      * Each child class should implement
-     *      * "private static final ArrayList<Move.Move> possMoves;"
-     *      * to simplify future calls to getPossMoves, but this is not enforced.
+     *      Each child class should implement
+     *      "private static final ArrayList<Move.Move> possMoves;"
+     *      to simplify future calls to getPossMoves, but this is not enforced.
      * @return A list of all possible moves relative to [0,0]
      */
     public abstract ArrayList<Move> getPossMoves();

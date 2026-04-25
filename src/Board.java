@@ -93,7 +93,10 @@ public class Board {
      * @param other the board to copy
      */
     public Board(Board other){
-        pieces = other.pieces;
+        for (int i = 0; i < 8; i++) {
+            pieces[i] = other.pieces[i].clone();
+        }
+        //pieces = other.pieces;
         whiteKingCoords = other.whiteKingCoords;
         blackKingCoords = other.blackKingCoords;
     }
@@ -339,6 +342,9 @@ public class Board {
         return false;
     }
 
+    /**
+     * @return true if the given integer is less than 0 or more than 7
+     */
     public boolean outOfBounds(int check) {
         if(check < 0 || check > 7) {
             return true;
@@ -389,7 +395,7 @@ public class Board {
         }
         Board checkTestBoard = new Board(this);
         checkTestBoard.makeMove(ret, coords[0]);
-        if(checkTestBoard.kingInCheck(pieces[coords[0][0]][coords[0][1]].getIsWhite())) {
+        if(checkTestBoard.kingInCheck(isWhite)) {
             throw new IllegalArgumentException("You can't end your turn in check.");
         }
         return ret;
@@ -416,5 +422,25 @@ public class Board {
         pieces[destination[0]][destination[1]] = pieces[from[0]][from[1]];
         pieces[from[0]][from[1]] = null;
 
+    }
+
+    public boolean hasLegalMoves(boolean isWhite) {
+        // ew
+        // what the algorithm
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                if(pieces[i][j] != null) {
+                    if(pieces[i][j].getIsWhite() == isWhite) {
+                        for(Move move : pieces[i][j].getPossMoves()) {
+                            if (getMove(new int[][]{{i, j}, {i + move.getDestination()[0],
+                                    j + move.getDestination()[1]}}, isWhite) != null) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
