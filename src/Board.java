@@ -3,8 +3,6 @@ import Piece.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Stack;
-import java.util.WeakHashMap;
 
 /**
  * Represents a board. holds pieces and manages whether movement is possible
@@ -429,11 +427,11 @@ public class Board {
                         exceptions.add("That king has already moved and cannot castle.");
                         continue;
                     }
-                    int[] rookSquare = new int[] {0,coords[0][1]};
+                    int[] rookSquare = new int[] {7,coords[0][1]};
                     int[] checkPath = new int[] {-1,0};
                     // if queenside castle
-                    if (ret.getDestination()[1] > 0) {
-                        rookSquare[0] = 8;
+                    if (ret.getDestination()[1] < 0) {
+                        rookSquare[0] = 0;
                         checkPath[0] = 1;
                     }
                     Piece rookHasNotMovedCheck = pieces[rookSquare[0]][rookSquare[1]];
@@ -516,6 +514,15 @@ public class Board {
 
         switch (move.getSpecialMove()) {
             case CASTLE:
+                int[] rookFromSquare = new int[] {7,from[1]};
+                int[] rookToSquare = new int[] {5,from[1]};
+                // if queenside castle
+                if (move.getDestination()[1] < 0) {
+                    rookFromSquare[0] = 0;
+                    rookToSquare[0] = 3;
+                }
+                pieces[rookToSquare[0]][rookToSquare[1]] = pieces[rookFromSquare[0]][rookFromSquare[1]].copy();
+                pieces[rookFromSquare[0]][rookFromSquare[1]] = null;
                 break;
             case EN_PASSANT:
                 pieces[from[0] + move.getDestination()[0]][from[1]] = null;
