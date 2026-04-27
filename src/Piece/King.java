@@ -1,6 +1,8 @@
 package Piece;
 
 import Move.Move;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -57,12 +59,17 @@ public class King extends Piece {
         ret.addAll(generateDirectionalMoves(new int[] {-1,1}, 1, Move.CaptureStatus.ANY));
         ret.addAll(generateDirectionalMoves(new int[] {-1,-1}, 1, Move.CaptureStatus.ANY));
 
-        //TODO: Add castling
         // Kingside castle
-        // ADD PATH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        ret.add(new Move(new int[] {0,-2}, null, Move.CaptureStatus.ANY, Move.SpecialMove.CASTLE));
+        ArrayList<int[]> kingsidePath = new ArrayList<>();
+        kingsidePath.add(new int[] {-1, 0});
+        kingsidePath.add(new int[] {-2, 0});
+        ret.add(new Move(new int[] {-2, 0}, kingsidePath, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.CASTLE));
         // Queenside castle
-        ret.add(new Move(new int[] {0,2}, null, Move.CaptureStatus.ANY, Move.SpecialMove.CASTLE));
+        ArrayList<int[]> queensidePath = new ArrayList<>();
+        queensidePath.add(new int[] {1,0});
+        queensidePath.add(new int[] {2,0});
+        queensidePath.add(new int[] {3, 0});
+        ret.add(new Move(new int[] {2,0}, queensidePath, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.CASTLE));
 
         return ret;
     }

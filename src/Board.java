@@ -125,12 +125,12 @@ public class Board {
         ret.append("\n");
         if(whiteOnBottom){
             for (int i = 7; i >= 0; i--) {
-                ret.append(getRowString(i, cellWidth, whiteOnBottom));
+                ret.append(getRowString(i, cellWidth, true));
                 ret.append("\n");
             }
         } else {
             for (int i = 0; i <= 7; i++) {
-                ret.append(getRowString(i, cellWidth, whiteOnBottom));
+                ret.append(getRowString(i, cellWidth, false));
                 ret.append("\n");
             }
         }
@@ -424,10 +424,48 @@ public class Board {
             switch (ret.getSpecialMove()) {
                 case CASTLE:
                     //just move king pointer and test check
+                    King kingHasNotMovedCheck = (King) pieces[coords[0][0]][coords[0][1]];
+                    if (kingHasNotMovedCheck.getHasMoved()) {
+                        exceptions.add("That king has already moved and cannot castle.");
+                        continue;
+                    }
+                    int[] rookSquare = new int[] {0,coords[0][1]};
+                    int[] checkPath = new int[] {-1,0};
+                    // if queenside castle
+                    if (ret.getDestination()[1] > 0) {
+                        rookSquare[0] = 8;
+                        checkPath[0] = 1;
+                    }
+                    Piece rookHasNotMovedCheck = pieces[rookSquare[0]][rookSquare[1]];
+                    if(rookHasNotMovedCheck.getClass() == Rook.class){
+                        if (((Rook) rookHasNotMovedCheck).getHasMoved()) {
+                            exceptions.add("That rook has already moved and cannot castle.");
+                            continue;
+                        }
+                    } else {
+                        exceptions.add("The piece in the corner you are castling towards is not a rook.");
+                        continue;
+                    }
+                    // check checkpath and [0,0] are not in check
+                    Board checkTestBoard = new Board(this);
+                    if (checkTestBoard.kingInCheck(isWhite)) {
+                        exceptions.add("You can't castle out of check.");
+                        continue;
+                    }
+                    if(isWhite) {
+                        checkTestBoard.whiteKingCoords[0] += (ret.getDestination()[0] / 2);
+                    } else {
+                        checkTestBoard.blackKingCoords[0] += (ret.getDestination()[0] / 2);
+                    }
+                    if (checkTestBoard.kingInCheck(isWhite)) {
+                        exceptions.add("You can't castle through check.");
+                        continue;
+                    }
+
                     break;
                 case PAWN_TWO:
-                    Pawn pawnMoveTwoCheck = (Pawn) pieces[coords[0][0]][coords[0][1]];
-                    if (pawnMoveTwoCheck.getHasMoved()) {
+                    Pawn pawnHasNotMovedCheck = (Pawn) pieces[coords[0][0]][coords[0][1]];
+                    if (pawnHasNotMovedCheck.getHasMoved()) {
                         exceptions.add("That pawn has already moved and cannot move two spaces at once.");
                         continue;
                     }

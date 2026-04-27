@@ -21,7 +21,7 @@ public class Rook extends Piece {
     /**
      * Gets whether or not the piece has moved. Used for castling.
      */
-    private boolean getHasMoved() { return hasMoved; }
+    public boolean getHasMoved() { return hasMoved; }
 
     /**
      * Creates a new rook
