@@ -5,7 +5,7 @@ public class BoardTest {
         //Board.ansiTest();
         Board stupid = new Board();
         System.out.println(stupid.getString(true));
-        Move move = new Move(new int[] {2, 2} , null, Move.CaptureStatus.ANY);
+        Move move = new Move(new int[] {2, 2} , null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL);
         stupid.makeMove(move, new int[]{1, 1});
         System.out.println(stupid.getString(true));
     }

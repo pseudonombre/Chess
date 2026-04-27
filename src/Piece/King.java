@@ -21,7 +21,7 @@ public class King extends Piece {
     /**
      * Gets whether or not the piece has moved. Used for castling.
      */
-    private boolean getHasMoved() { return hasMoved; }
+    public boolean getHasMoved() { return hasMoved; }
 
     /**
      * Creates a new king
@@ -29,6 +29,13 @@ public class King extends Piece {
      */
     public King(boolean c_isWhite) {
         super(c_isWhite, 'K');
+    }
+
+    @Override
+    public King copy() {
+        King ret = new King(getIsWhite());
+        ret.hasMoved = hasMoved;
+        return ret;
     }
 
     /**
@@ -51,6 +58,11 @@ public class King extends Piece {
         ret.addAll(generateDirectionalMoves(new int[] {-1,-1}, 1, Move.CaptureStatus.ANY));
 
         //TODO: Add castling
+        // Kingside castle
+        // ADD PATH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ret.add(new Move(new int[] {0,-2}, null, Move.CaptureStatus.ANY, Move.SpecialMove.CASTLE));
+        // Queenside castle
+        ret.add(new Move(new int[] {0,2}, null, Move.CaptureStatus.ANY, Move.SpecialMove.CASTLE));
 
         return ret;
     }

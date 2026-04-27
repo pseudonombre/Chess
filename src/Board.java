@@ -1,6 +1,7 @@
 import Move.Move;
 import Piece.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 import java.util.WeakHashMap;
@@ -94,9 +95,11 @@ public class Board {
      */
     public Board(Board other){
         for (int i = 0; i < 8; i++) {
-            pieces[i] = other.pieces[i].clone();
+            for (int j = 0; j < 8; j++) {
+                if(other.pieces[i][j] == null) { continue; }
+                pieces[i][j] = other.pieces[i][j].copy();
+            }
         }
-        //pieces = other.pieces;
         whiteKingCoords = other.whiteKingCoords;
         blackKingCoords = other.blackKingCoords;
     }
@@ -362,43 +365,94 @@ public class Board {
      * @return The Move if the move is possible, null if not
      */
     public Move getMove(int[][] coords, boolean isWhite) throws IllegalArgumentException {
+// PIECE ON FROM SQUARE
         if(pieces[coords[0][0]][coords[0][1]] == null) {
             throw new IllegalArgumentException("There is not a piece on the starting square.");
         }
+// PIECE IS PLAYER'S COLOR
         if(pieces[coords[0][0]][coords[0][1]].getIsWhite() != isWhite) {
             throw new IllegalArgumentException("Moving an opponent's piece is not allowed.");
         }
+// GET MOVE DATA FROM THE PIECE
         int[] delta = new int[] {coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]};
-        Move ret = pieces[coords[0][0]][coords[0][1]].getMove(delta);
-        if(ret == null) { throw new IllegalArgumentException(
-                String.format("\"%s\" cannot move in that shape: \"%s\"", //\nIt moves in shapes: \"%s\".",
-                        pieces[coords[0][0]][coords[0][1]].getClass(),
-                        Arrays.toString(delta))); }
-                        //pieces[coords[0][0]][coords[0][1]].getPossMoves())); }
-        for(int[] pathSpace : ret.getPath()) {
-            if(pieces[pathSpace[0] + coords[0][0]][pathSpace[1] + coords[0][1]] != null) {
-                throw new IllegalArgumentException("There are pieces in the way of that move.");
+        ArrayList<Move> moves = pieces[coords[0][0]][coords[0][1]].getMoves(delta);
+// PIECE CAN MOVE IN THE RIGHT SHAPE
+        if (moves.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("\"%s\" cannot move in that shape: \"%s\"", //\nIt moves in shapes: \"%s\".",
+                            pieces[coords[0][0]][coords[0][1]].getClass(),
+                            Arrays.toString(delta)));
+        }
+// FOR EACH POSSIBLE MOVE
+        ArrayList<String> exceptions = new ArrayList<>();
+        moveListLoop:
+        for (int i = 0; i < moves.size(); i++) {
+            Move ret = moves.get(i);
+// THE MOVE'S PATH IS EMPTY
+            for (int[] pathSpace : ret.getPath()) {
+                if (pieces[pathSpace[0] + coords[0][0]][pathSpace[1] + coords[0][1]] != null) {
+                    exceptions.add("There are pieces in the way of that move.");
+                    continue moveListLoop;
+                }
+            }
+// CAPTURE STATUS IS CORRECT
+            Piece destinationPiece = pieces[coords[1][0]][coords[1][1]];
+            if (destinationPiece == null) {
+                if (ret.getCaptureStatus() == Move.CaptureStatus.MUST_CAPTURE) {
+                    exceptions.add("That move must capture, but there is nothing to capture.");
+                    continue;
+                }
+            } else {
+                if (ret.getCaptureStatus() == Move.CaptureStatus.CANNOT_CAPTURE) {
+                    exceptions.add("That move cannot capture, and there is a piece on the destination square.");
+                    continue;
+                }
+                if (destinationPiece.getIsWhite() == isWhite) {
+                    exceptions.add("You can't capture your own pieces.");
+                    continue;
+                }
+            }
+//        if(ret.getSupplimentaryCondition() != null) {
+//            if(! ret.getSupplimentaryCondition().test(coords)){
+//                exceptions.add("That move is not possible due to a special rule involving it.\n" +
+//                        "Normally, this is attempting en passant, moving a pawn two forwards,\n" +
+//                        "or castling when it is not allowed.");
+//            }
+//        }
+
+// SPECIAL MOVES
+            switch (ret.getSpecialMove()) {
+                case CASTLE:
+                    //just move king pointer and test check
+                    break;
+                case PAWN_TWO:
+                    Pawn pawnMoveTwoCheck = (Pawn) pieces[coords[0][0]][coords[0][1]];
+                    if (pawnMoveTwoCheck.getHasMoved()) {
+                        exceptions.add("That pawn has already moved and cannot move two spaces at once.");
+                        continue;
+                    }
+                    break;
+                case EN_PASSANT:
+                    Pawn enPassantCheck = (Pawn) pieces[coords[0][0] + ret.getDestination()[0]][coords[0][1]];
+                    if ( (! enPassantCheck.getJustMovedTwo()) || enPassantCheck.getIsWhite() == isWhite) {
+                        exceptions.add("En passant is not possible here");
+                        continue;
+                    }
+                    break;
+            }
+// NOT ENDING IN CHECK
+            Board checkTestBoard = new Board(this);
+            checkTestBoard.makeMove(ret, coords[0]);
+            if (checkTestBoard.kingInCheck(isWhite)) {
+                exceptions.add("You can't end your turn in check.");
+                continue;
+            }
+            if(exceptions.size() < (i + 1)) {
+                return ret;
             }
         }
-        Piece destinationPiece = pieces[coords[1][0]][coords[1][1]];
-        if (destinationPiece == null) {
-            if(ret.getCaptureStatus() == Move.CaptureStatus.MUST_CAPTURE) {
-                throw new IllegalArgumentException("That move must capture, but there is nothing to capture.");
-            }
-        } else {
-            if (ret.getCaptureStatus() == Move.CaptureStatus.CANNOT_CAPTURE) {
-                throw new IllegalArgumentException("That move cannot capture, and there is a piece on the destination square.");
-            }
-            if (destinationPiece.getIsWhite() == isWhite) {
-                throw new IllegalArgumentException("You can't capture your own pieces.");
-            }
-        }
-        Board checkTestBoard = new Board(this);
-        checkTestBoard.makeMove(ret, coords[0]);
-        if(checkTestBoard.kingInCheck(isWhite)) {
-            throw new IllegalArgumentException("You can't end your turn in check.");
-        }
-        return ret;
+        // RETURN MOVE
+        throw new IllegalArgumentException(String.valueOf(exceptions));
     }
 
     /**
@@ -419,23 +473,42 @@ public class Board {
         }
         destination[0] += move.getDestination()[0];
         destination[1] += move.getDestination()[1];
-        pieces[destination[0]][destination[1]] = pieces[from[0]][from[1]];
+        pieces[destination[0]][destination[1]] = pieces[from[0]][from[1]].copy();
         pieces[from[0]][from[1]] = null;
 
+        switch (move.getSpecialMove()) {
+            case CASTLE:
+                break;
+            case EN_PASSANT:
+                pieces[from[0] + move.getDestination()[0]][from[1]] = null;
+                break;
+        }
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(i == destination[0] && j == destination[1]) { continue; }
+                Piece piece = pieces[i][j];
+                if(piece == null) { continue; }
+                if(piece.getClass() == Pawn.class) {
+                    ((Pawn) piece).setJustMovedTwoFalse();
+                }
+            }
+        }
+        pieces[destination[0]][destination[1]].move(move);
     }
 
     public boolean hasLegalMoves(boolean isWhite) {
+        Board copy = new Board(this);
         // ew
         // what the algorithm
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
-                if(pieces[i][j] != null) {
-                    if(pieces[i][j].getIsWhite() == isWhite) {
-                        for(Move move : pieces[i][j].getPossMoves()) {
+                if(copy.pieces[i][j] != null) {
+                    if(copy.pieces[i][j].getIsWhite() == isWhite) {
+                        for(Move move : copy.pieces[i][j].getPossMoves()) {
                             // no catch because an exception simply means the move is not possible and we can
                             // just move on
                             try {
-                                if (getMove(new int[][]{{i, j}, {i + move.getDestination()[0],
+                                if (copy.getMove(new int[][]{{i, j}, {i + move.getDestination()[0],
                                         j + move.getDestination()[1]}}, isWhite) != null) {
                                     return true;
                                 }

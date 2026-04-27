@@ -21,6 +21,12 @@ public class Queen extends Piece {
         super(c_isWhite, 'Q');
     }
 
+    @Override
+    public Queen copy() {
+        Queen ret = new Queen(getIsWhite());
+        return ret;
+    }
+
     /**
      * Gets a list of all possible  relative to [0,0]. Generates the list only if possMoves has not been filled.
      * @return A list of all possible moves relative to [0,0]

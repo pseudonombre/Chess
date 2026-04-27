@@ -48,18 +48,25 @@ public abstract class Piece {
     }
 
     /**
+     * Creates a copy of the piece
+     * @return a copy of the current piece
+     */
+    public abstract Piece copy();
+
+    /**
      * Gets the move corresponding to a given destination relative to [0,0].
      * @param destination The destination of the move relative to [0,0]
      * @return A move corresponding to the given destination if possible, null if no such legal move exists.
      */
-    public Move getMove(int[] destination) {
+    public ArrayList<Move> getMoves(int[] destination) {
+        ArrayList<Move> ret = new ArrayList<>();
         ArrayList<Move> moveList = getPossMoves();
         for(Move m : moveList) {
             if(Arrays.equals(m.getDestination(),destination)) {
-                return m;
+                ret.add(m);
             }
         }
-        return null;
+        return ret;
     }
 
     /**
@@ -94,7 +101,7 @@ public abstract class Piece {
             currentSquare[0] += direction[0];
             currentSquare[1] += direction[1];
         }
-        return new Move(currentSquare, path, captureStatus);
+        return new Move(currentSquare, path, captureStatus, Move.SpecialMove.NORMAL);
     }
 
     /**
@@ -126,7 +133,8 @@ public abstract class Piece {
                 newSpace[1] *= -1;
                 newPath.add(newSpace);
             }
-            ret.add(new Move(newDestination, newPath, move.getCaptureStatus()));
+            ret.add(new Move(newDestination, newPath, move.getCaptureStatus(),
+                    move.getSpecialMove()));
         }
         return ret;
     }

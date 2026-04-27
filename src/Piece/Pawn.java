@@ -3,6 +3,8 @@ package Piece;
 import Move.Move;
 import java.util.ArrayList;
 
+import static java.lang.Math.abs;
+
 
 /**
  * Implements the pawn.
@@ -21,7 +23,25 @@ public class Pawn extends Piece {
     /**
      * Gets whether or not the piece has moved. Used for jumping two spaces on the first move.
      */
-    private boolean getHasMoved() { return hasMoved; }
+    public boolean getHasMoved() { return hasMoved; }
+
+    /**
+     * Whether or not the piece just moved two spaces. used for en passant.
+     */
+    private boolean justMovedTwo = false;
+
+    /**
+     * Gets whether or not the piece just moved two spaces. used for en passant.
+     */
+    public boolean getJustMovedTwo() { return justMovedTwo; }
+
+    /**
+     * Sets justMovedTwo to false. Used when other pieces move.
+     */
+    public void setJustMovedTwoFalse() {
+        if(justMovedTwo)
+            justMovedTwo = false;
+    }
 
     /**
      * Creates a new pawn
@@ -29,6 +49,14 @@ public class Pawn extends Piece {
      */
     public Pawn(boolean c_isWhite) {
         super(c_isWhite, 'p');
+    }
+
+    @Override
+    public Pawn copy() {
+        Pawn ret = new Pawn(getIsWhite());
+        ret.hasMoved = hasMoved;
+        ret.justMovedTwo = justMovedTwo;
+        return ret;
     }
 
     /**
@@ -46,17 +74,20 @@ public class Pawn extends Piece {
         }
         ArrayList<Move> ret = new ArrayList<>();
 
-        ret.add(new Move(new int[]{0, 1}, null, Move.CaptureStatus.CANNOT_CAPTURE));
-        ret.add(new Move(new int[]{1, 1}, null, Move.CaptureStatus.MUST_CAPTURE));
-        ret.add(new Move(new int[]{-1, 1}, null, Move.CaptureStatus.MUST_CAPTURE));
+        ret.add(new Move(new int[]{0, 1}, null, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.NORMAL));
+        ret.add(new Move(new int[]{1, 1}, null, Move.CaptureStatus.MUST_CAPTURE, Move.SpecialMove.NORMAL));
+        ret.add(new Move(new int[]{-1, 1}, null, Move.CaptureStatus.MUST_CAPTURE, Move.SpecialMove.NORMAL));
         //TODO: Find way to enforce the following move happening only on first move
 
         /* hasMoved variable already exists
         Possibly add an optional lambda function to Move that Board can run that must return true?
         Maybe add a lambda that runs after the move for promotion*/
-        ret.add(new Move(new int[]{0, 2}, null, Move.CaptureStatus.CANNOT_CAPTURE));
+        ret.add(new Move(new int[]{0, 2}, null, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.PAWN_TWO));
 
         //En passant??
+
+        ret.add(new Move(new int[]{1, 1}, null, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.EN_PASSANT));
+        ret.add(new Move(new int[]{-1, 1}, null, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.EN_PASSANT));
 
         /*
         The moves for black pieces should be reversed, but because this should only run once at the start and
@@ -68,6 +99,14 @@ public class Pawn extends Piece {
     @Override
     public void move(Move m) {
         hasMoved = true;
+        if(abs(m.getDestination()[1]) == 2) {
+            justMovedTwo = true;
+        } else {
+            // this statement required because the justMovedTwo statuses of all pawns on the board except the one
+            // that just moved are set to false every move. This will only be relevant when a pawn moves again after
+            // moving two, but still important
+            justMovedTwo = false;
+        }
     }
 
 }

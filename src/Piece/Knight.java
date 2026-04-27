@@ -21,6 +21,12 @@ public class Knight extends Piece {
         super(c_isWhite, 'N');
     }
 
+    @Override
+    public Knight copy() {
+        Knight ret = new Knight(getIsWhite());
+        return ret;
+    }
+
     /**
      * Gets a list of all possible  relative to [0,0]. Generates the list only if possMoves has not been filled.
      * @return A list of all possible moves relative to [0,0]
@@ -30,15 +36,15 @@ public class Knight extends Piece {
         if(possMoves != null){ return possMoves; }
         ArrayList<Move> ret = new ArrayList<>();
 
-        ret.add(new Move(new int[] {2,1}, null, Move.CaptureStatus.ANY));
-        ret.add(new Move(new int[] {2,-1}, null, Move.CaptureStatus.ANY));
-        ret.add(new Move(new int[] {-2,1}, null, Move.CaptureStatus.ANY));
-        ret.add(new Move(new int[] {-2,-1}, null, Move.CaptureStatus.ANY));
+        ret.add(new Move(new int[] {2,1}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL));
+        ret.add(new Move(new int[] {2,-1}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL));
+        ret.add(new Move(new int[] {-2,1}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL));
+        ret.add(new Move(new int[] {-2,-1}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL));
 
-        ret.add(new Move(new int[] {1,2}, null, Move.CaptureStatus.ANY));
-        ret.add(new Move(new int[] {1,-2}, null, Move.CaptureStatus.ANY));
-        ret.add(new Move(new int[] {-1,2}, null, Move.CaptureStatus.ANY));
-        ret.add(new Move(new int[] {-1,-2}, null, Move.CaptureStatus.ANY));
+        ret.add(new Move(new int[] {1,2}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL));
+        ret.add(new Move(new int[] {1,-2}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL));
+        ret.add(new Move(new int[] {-1,2}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL));
+        ret.add(new Move(new int[] {-1,-2}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL));
 
         return ret;
     }

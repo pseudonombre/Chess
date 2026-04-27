@@ -21,6 +21,12 @@ public class Bishop extends Piece {
         super(c_isWhite, 'B');
     }
 
+    @Override
+    public Bishop copy() {
+        Bishop ret = new Bishop(getIsWhite());
+        return ret;
+    }
+
     /**
      * Gets a list of all possible  relative to [0,0]. Generates the list only if possMoves has not been filled.
      * @return A list of all possible moves relative to [0,0]

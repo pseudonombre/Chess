@@ -31,6 +31,12 @@ public class Rook extends Piece {
         super(c_isWhite, 'R');
     }
 
+    @Override
+    public Rook copy() {
+        Rook ret = new Rook(getIsWhite());
+        ret.hasMoved = hasMoved;
+        return ret;
+    }
 
     /**
      * Gets a list of all possible  relative to [0,0]. Generates the list only if possMoves has not been filled.
