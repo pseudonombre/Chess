@@ -91,8 +91,11 @@ public class Player {
         REDO
     }
 
+    /**
+     * Gets the player's input to determine what to promote a pawn to
+     * @return A character representing the piece to promote to
+     */
     public char getPromotion(){
-
         System.out.print(name + ": enter 'q', 'n', 'r', or 'b' to promote your pawn: ");
         String input = new Scanner(System.in).nextLine();
         input = input.strip().toLowerCase();
