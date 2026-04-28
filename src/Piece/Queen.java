@@ -21,6 +21,10 @@ public class Queen extends Piece {
         super(c_isWhite, 'Q');
     }
 
+    /**
+     * Creates a copy of the Queen
+     * @return a copy of the current Queen
+     */
     @Override
     public Queen copy() {
         Queen ret = new Queen(getIsWhite());
@@ -49,6 +53,10 @@ public class Queen extends Piece {
         return ret;
     }
 
+    /**
+     * Updates internal states of pieces; Queen has no internal states to update
+     * @param m The move being played
+     */
     @Override
     public void move(Move m) {
     }

@@ -33,6 +33,10 @@ public class King extends Piece {
         super(c_isWhite, 'K');
     }
 
+    /**
+     * Creates a copy of the King
+     * @return a copy of the current King
+     */
     @Override
     public King copy() {
         King ret = new King(getIsWhite());
@@ -74,6 +78,10 @@ public class King extends Piece {
         return ret;
     }
 
+    /**
+     * Update hasMoved
+     * @param m The move being played
+     */
     @Override
     public void move(Move m) {
         hasMoved = true;

@@ -31,6 +31,10 @@ public class Rook extends Piece {
         super(c_isWhite, 'R');
     }
 
+    /**
+     * Creates a copy of the Rook
+     * @return a copy of the current Rook
+     */
     @Override
     public Rook copy() {
         Rook ret = new Rook(getIsWhite());
@@ -55,6 +59,10 @@ public class Rook extends Piece {
         return ret;
     }
 
+    /**
+     * Update hasMoved
+     * @param m The move being played
+     */
     @Override
     public void move(Move m) {
         hasMoved = true;

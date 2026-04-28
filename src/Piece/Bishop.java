@@ -21,6 +21,10 @@ public class Bishop extends Piece {
         super(c_isWhite, 'B');
     }
 
+    /**
+     * Creates a copy of the Bishop
+     * @return a copy of the current Bishop
+     */
     @Override
     public Bishop copy() {
         Bishop ret = new Bishop(getIsWhite());
@@ -44,6 +48,10 @@ public class Bishop extends Piece {
         return ret;
     }
 
+    /**
+     * Updates internal states of pieces; Bishop has no internal states to update
+     * @param m The move being played
+     */
     @Override
     public void move(Move m) {
     }
