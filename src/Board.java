@@ -102,8 +102,11 @@ public class Board {
         blackKingCoords = other.blackKingCoords.clone();
     }
 
+    /** Resets formatting when printed. Used for board display*/
     public static final String ANSI_RESET = "\u001B[0m";
+    /** Sets the format to black background with white text when printed. Used for board display*/
     public static final String ANSI_BLACK_BACKGROUND_WHITE_TEXT = "\u001B[40m\u001B[37m";
+    /** Sets the format to white background with black text when printed. Used for board display*/
     public static final String ANSI_WHITE_BACKGROUND_BLACK_TEXT = "\u001B[47m\u001B[30m";
 
     /**
@@ -208,6 +211,7 @@ public class Board {
     /**
      * Gets a header to label the files of the board
      * @param cellWidth Width oc cells in the board
+     * @param whiteOnBottom Whether to print with rank 1 on bottom rather than rank 8
      * @return a header to label the files of the board
      */
     private String getHeaderString(int cellWidth, boolean whiteOnBottom) {
@@ -410,13 +414,6 @@ public class Board {
                     continue;
                 }
             }
-//        if(ret.getSupplimentaryCondition() != null) {
-//            if(! ret.getSupplimentaryCondition().test(coords)){
-//                exceptions.add("That move is not possible due to a special rule involving it.\n" +
-//                        "Normally, this is attempting en passant, moving a pawn two forwards,\n" +
-//                        "or castling when it is not allowed.");
-//            }
-//        }
 
 // SPECIAL MOVES
             switch (ret.getSpecialMove()) {
@@ -550,6 +547,11 @@ public class Board {
         return false;
     }
 
+    /**
+     * Tests if the given side has legal moves
+     * @param isWhite true to test if White has legal moves, false for black
+     * @return true if the given side has legal moves
+     * */
     public boolean hasLegalMoves(boolean isWhite) {
         Board copy = new Board(this);
         // ew
@@ -575,6 +577,11 @@ public class Board {
         return false;
     }
 
+    /**
+     * Promotes the pawn at the given square
+     * @param destination the location of the promoting pawn
+     * @param desiredPiece the piece to promote to
+     */
     void promotePiece(int[] destination, char desiredPiece) {
         if(destination.length != 2) { throw new IllegalArgumentException(); }
         if(destination[1] != 0 && destination[1] != 7) { throw new IllegalArgumentException(); }
