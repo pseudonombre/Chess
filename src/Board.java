@@ -98,8 +98,8 @@ public class Board {
                 pieces[i][j] = other.pieces[i][j].copy();
             }
         }
-        whiteKingCoords = other.whiteKingCoords;
-        blackKingCoords = other.blackKingCoords;
+        whiteKingCoords = other.whiteKingCoords.clone();
+        blackKingCoords = other.blackKingCoords.clone();
     }
 
     public static final String ANSI_RESET = "\u001B[0m";
@@ -495,8 +495,9 @@ public class Board {
      * Makes the given move.
      * @param move the move to make
      * @param from where the move is from
+     * @return wether or not the move results in a promotion
      */
-    public void makeMove(Move move, int[] from) {
+    public boolean makeMove(Move move, int[] from) {
         int[] destination = from.clone();
         if(pieces[from[0]][from[1]].getClass().equals(King.class)) {
             if(pieces[from[0]][from[1]].getIsWhite()) {
@@ -528,6 +529,13 @@ public class Board {
                 pieces[from[0] + move.getDestination()[0]][from[1]] = null;
                 break;
         }
+        if(pieces[destination[0]][destination[1]].getClass() == Pawn.class){
+            if(destination[1] == 7 || destination[1] == 0) {
+                return true;
+            }
+        }
+
+
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if(i == destination[0] && j == destination[1]) { continue; }
@@ -539,14 +547,15 @@ public class Board {
             }
         }
         pieces[destination[0]][destination[1]].move(move);
+        return false;
     }
 
     public boolean hasLegalMoves(boolean isWhite) {
         Board copy = new Board(this);
         // ew
         // what the algorithm
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 if(copy.pieces[i][j] != null) {
                     if(copy.pieces[i][j].getIsWhite() == isWhite) {
                         for(Move move : copy.pieces[i][j].getPossMoves()) {
@@ -564,5 +573,30 @@ public class Board {
             }
         }
         return false;
+    }
+
+    void promotePiece(int[] destination, char desiredPiece) {
+        if(destination.length != 2) { throw new IllegalArgumentException(); }
+        boolean isWhite = pieces[destination[0]][destination[1]].getIsWhite();
+        // to set hasMoved to true
+        Move defaultMove = new Move(new int[] {0,0}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL);
+        switch(desiredPiece) {
+            case 'q':
+                pieces[destination[0]][destination[1]] = new Queen(isWhite);
+                pieces[destination[0]][destination[1]].move(defaultMove);
+                break;
+            case 'n':
+                pieces[destination[0]][destination[1]] = new Knight(isWhite);
+                pieces[destination[0]][destination[1]].move(defaultMove);
+                break;
+            case 'r':
+                pieces[destination[0]][destination[1]] = new Rook(isWhite);
+                pieces[destination[0]][destination[1]].move(defaultMove);
+                break;
+            case 'b':
+                pieces[destination[0]][destination[1]] = new Bishop(isWhite);
+                pieces[destination[0]][destination[1]].move(defaultMove);
+                break;
+        }
     }
 }

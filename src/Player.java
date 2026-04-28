@@ -90,4 +90,18 @@ public class Player {
         UNDO,
         REDO
     }
+
+    public char getPromotion(){
+
+        System.out.print(name + ": enter 'q', 'n', 'r', or 'b' to promote your pawn: ");
+        String input = new Scanner(System.in).nextLine();
+        input = input.strip().toLowerCase();
+        String validLetters = "qnrb";
+        if(validLetters.indexOf(input.charAt(0)) != -1) {
+            return input.charAt(0);
+        } else {
+            System.out.println("Invalid input");
+            return ' ';
+        }
+    }
 }

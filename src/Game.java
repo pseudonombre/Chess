@@ -93,7 +93,13 @@ public class Game {
             }
             //play it
             undoStack.push(new Board(undoStack.peek()));
-            undoStack.peek().makeMove(currentMove, currentInput[0]);
+            if(undoStack.peek().makeMove(currentMove, currentInput[0])) {
+                char desiredPiece = currentPlayer.getPromotion();
+                while(desiredPiece == ' '){
+                    desiredPiece = currentPlayer.getPromotion();
+                }
+                undoStack.peek().promotePiece(currentInput[1], desiredPiece);
+            }
             redoStack.clear();
             // check for checkmate / stalemate
             if(! undoStack.peek().hasLegalMoves( ! whiteToMove)) {
