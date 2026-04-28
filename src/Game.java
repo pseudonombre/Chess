@@ -202,12 +202,4 @@ public class Game {
         UNDO,
         REDO
     }
-
-    /**
-     * lets outside classes access ordinals for this enum
-     * @return the ordinal of the enumerated constant
-     */
-    public int getOrdinal(otherInputs e) {
-        return e.ordinal();
-    }
 }
