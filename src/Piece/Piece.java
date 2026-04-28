@@ -26,15 +26,8 @@ public abstract class Piece {
     /**
      * @return The character to print for this piece when displaying the board
      */
-    public char getPrintCharacter(){
+    public char getPrintCharacter() {
         return printCharacter;
-        // the below was written before Board.getString handled piece colors and is kept
-        // for reference in case changes are made.
-//        if(isWhite){
-//            return Character.toUpperCase(printCharacter);
-//        } else {
-//            return Character.toLowerCase(printCharacter);
-//        }
     }
 
     /**
@@ -85,7 +78,7 @@ public abstract class Piece {
     public abstract void move(Move m);
 
     /**
-     * Generates all squares in the specified direction
+     * Generates a move in the specified direction
      * @param direction the first square relative to [0,0] in the direction of movement
      * @param distance the longest that the piece is able to move. Capped to seven due to board size eight.
      * @return a move in the specified direction the specified distance.
@@ -121,6 +114,11 @@ public abstract class Piece {
         return ret;
     }
 
+    /**
+     * Reverses the vertical direction of all the moves. Used for getting black pawn moves from white pawn moves.
+     * @param moves The moves to reverse
+     * @return The reverse of the moves supplied
+     */
     public static ArrayList<Move> reverseMoves(ArrayList<Move> moves) {
         ArrayList<Move> ret = new ArrayList<>();
         for(Move move : moves){
