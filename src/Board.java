@@ -577,6 +577,8 @@ public class Board {
 
     void promotePiece(int[] destination, char desiredPiece) {
         if(destination.length != 2) { throw new IllegalArgumentException(); }
+        if(destination[1] != 0 && destination[1] != 7) { throw new IllegalArgumentException(); }
+        if(outOfBounds(destination[0])) { throw new IllegalArgumentException(); }
         boolean isWhite = pieces[destination[0]][destination[1]].getIsWhite();
         // to set hasMoved to true
         Move defaultMove = new Move(new int[] {0,0}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL);
