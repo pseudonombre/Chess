@@ -21,6 +21,10 @@ public class Knight extends Piece {
         super(c_isWhite, 'N');
     }
 
+    /**
+     * Creates a copy of the Knight
+     * @return a copy of the current Knight
+     */
     @Override
     public Knight copy() {
         Knight ret = new Knight(getIsWhite());
@@ -49,6 +53,10 @@ public class Knight extends Piece {
         return ret;
     }
 
+    /**
+     * Updates internal states of pieces; Knight has no internal states to update
+     * @param m The move being played
+     */
     @Override
     public void move(Move m) {
     }

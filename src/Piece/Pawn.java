@@ -51,6 +51,10 @@ public class Pawn extends Piece {
         super(c_isWhite, 'p');
     }
 
+    /**
+     * Creates a copy of the Pawn
+     * @return a copy of the current Pawn
+     */
     @Override
     public Pawn copy() {
         Pawn ret = new Pawn(getIsWhite());
@@ -74,18 +78,15 @@ public class Pawn extends Piece {
         }
         ArrayList<Move> ret = new ArrayList<>();
 
+        //Normal moves
         ret.add(new Move(new int[]{0, 1}, null, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.NORMAL));
         ret.add(new Move(new int[]{1, 1}, null, Move.CaptureStatus.MUST_CAPTURE, Move.SpecialMove.NORMAL));
         ret.add(new Move(new int[]{-1, 1}, null, Move.CaptureStatus.MUST_CAPTURE, Move.SpecialMove.NORMAL));
-        //TODO: Find way to enforce the following move happening only on first move
 
-        /* hasMoved variable already exists
-        Possibly add an optional lambda function to Move that Board can run that must return true?
-        Maybe add a lambda that runs after the move for promotion*/
+        //Move two
         ret.add(new Move(new int[]{0, 2}, null, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.PAWN_TWO));
 
-        //En passant??
-
+        //En passant
         ret.add(new Move(new int[]{1, 1}, null, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.EN_PASSANT));
         ret.add(new Move(new int[]{-1, 1}, null, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.EN_PASSANT));
 
@@ -96,6 +97,10 @@ public class Pawn extends Piece {
         return ret;
     }
 
+    /**
+     * Update hasMoved and justMovedTwo
+     * @param m The move being played
+     */
     @Override
     public void move(Move m) {
         hasMoved = true;

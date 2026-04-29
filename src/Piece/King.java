@@ -33,6 +33,10 @@ public class King extends Piece {
         super(c_isWhite, 'K');
     }
 
+    /**
+     * Creates a copy of the King
+     * @return a copy of the current King
+     */
     @Override
     public King copy() {
         King ret = new King(getIsWhite());
@@ -61,19 +65,23 @@ public class King extends Piece {
 
         // Kingside castle
         ArrayList<int[]> kingsidePath = new ArrayList<>();
-        kingsidePath.add(new int[] {-1, 0});
-        kingsidePath.add(new int[] {-2, 0});
-        ret.add(new Move(new int[] {-2, 0}, kingsidePath, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.CASTLE));
+        kingsidePath.add(new int[] {1, 0});
+        kingsidePath.add(new int[] {2, 0});
+        ret.add(new Move(new int[] {2, 0}, kingsidePath, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.CASTLE));
         // Queenside castle
         ArrayList<int[]> queensidePath = new ArrayList<>();
-        queensidePath.add(new int[] {1,0});
-        queensidePath.add(new int[] {2,0});
-        queensidePath.add(new int[] {3, 0});
-        ret.add(new Move(new int[] {2,0}, queensidePath, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.CASTLE));
+        queensidePath.add(new int[] {-1,0});
+        queensidePath.add(new int[] {-2,0});
+        queensidePath.add(new int[] {-3, 0});
+        ret.add(new Move(new int[] {-2,0}, queensidePath, Move.CaptureStatus.CANNOT_CAPTURE, Move.SpecialMove.CASTLE));
 
         return ret;
     }
 
+    /**
+     * Update hasMoved
+     * @param m The move being played
+     */
     @Override
     public void move(Move m) {
         hasMoved = true;

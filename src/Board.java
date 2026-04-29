@@ -3,8 +3,6 @@ import Piece.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Stack;
-import java.util.WeakHashMap;
 
 /**
  * Represents a board. holds pieces and manages whether movement is possible
@@ -100,12 +98,15 @@ public class Board {
                 pieces[i][j] = other.pieces[i][j].copy();
             }
         }
-        whiteKingCoords = other.whiteKingCoords;
-        blackKingCoords = other.blackKingCoords;
+        whiteKingCoords = other.whiteKingCoords.clone();
+        blackKingCoords = other.blackKingCoords.clone();
     }
 
+    /** Resets formatting when printed. Used for board display*/
     public static final String ANSI_RESET = "\u001B[0m";
+    /** Sets the format to black background with white text when printed. Used for board display*/
     public static final String ANSI_BLACK_BACKGROUND_WHITE_TEXT = "\u001B[40m\u001B[37m";
+    /** Sets the format to white background with black text when printed. Used for board display*/
     public static final String ANSI_WHITE_BACKGROUND_BLACK_TEXT = "\u001B[47m\u001B[30m";
 
     /**
@@ -210,6 +211,7 @@ public class Board {
     /**
      * Gets a header to label the files of the board
      * @param cellWidth Width oc cells in the board
+     * @param whiteOnBottom Whether to print with rank 1 on bottom rather than rank 8
      * @return a header to label the files of the board
      */
     private String getHeaderString(int cellWidth, boolean whiteOnBottom) {
@@ -412,13 +414,6 @@ public class Board {
                     continue;
                 }
             }
-//        if(ret.getSupplimentaryCondition() != null) {
-//            if(! ret.getSupplimentaryCondition().test(coords)){
-//                exceptions.add("That move is not possible due to a special rule involving it.\n" +
-//                        "Normally, this is attempting en passant, moving a pawn two forwards,\n" +
-//                        "or castling when it is not allowed.");
-//            }
-//        }
 
 // SPECIAL MOVES
             switch (ret.getSpecialMove()) {
@@ -429,11 +424,11 @@ public class Board {
                         exceptions.add("That king has already moved and cannot castle.");
                         continue;
                     }
-                    int[] rookSquare = new int[] {0,coords[0][1]};
+                    int[] rookSquare = new int[] {7,coords[0][1]};
                     int[] checkPath = new int[] {-1,0};
                     // if queenside castle
-                    if (ret.getDestination()[1] > 0) {
-                        rookSquare[0] = 8;
+                    if (ret.getDestination()[1] < 0) {
+                        rookSquare[0] = 0;
                         checkPath[0] = 1;
                     }
                     Piece rookHasNotMovedCheck = pieces[rookSquare[0]][rookSquare[1]];
@@ -497,8 +492,9 @@ public class Board {
      * Makes the given move.
      * @param move the move to make
      * @param from where the move is from
+     * @return wether or not the move results in a promotion
      */
-    public void makeMove(Move move, int[] from) {
+    public boolean makeMove(Move move, int[] from) {
         int[] destination = from.clone();
         if(pieces[from[0]][from[1]].getClass().equals(King.class)) {
             if(pieces[from[0]][from[1]].getIsWhite()) {
@@ -516,11 +512,27 @@ public class Board {
 
         switch (move.getSpecialMove()) {
             case CASTLE:
+                int[] rookFromSquare = new int[] {7,from[1]};
+                int[] rookToSquare = new int[] {5,from[1]};
+                // if queenside castle
+                if (move.getDestination()[1] < 0) {
+                    rookFromSquare[0] = 0;
+                    rookToSquare[0] = 3;
+                }
+                pieces[rookToSquare[0]][rookToSquare[1]] = pieces[rookFromSquare[0]][rookFromSquare[1]].copy();
+                pieces[rookFromSquare[0]][rookFromSquare[1]] = null;
                 break;
             case EN_PASSANT:
                 pieces[from[0] + move.getDestination()[0]][from[1]] = null;
                 break;
         }
+        if(pieces[destination[0]][destination[1]].getClass() == Pawn.class){
+            if(destination[1] == 7 || destination[1] == 0) {
+                return true;
+            }
+        }
+
+
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if(i == destination[0] && j == destination[1]) { continue; }
@@ -532,14 +544,20 @@ public class Board {
             }
         }
         pieces[destination[0]][destination[1]].move(move);
+        return false;
     }
 
+    /**
+     * Tests if the given side has legal moves
+     * @param isWhite true to test if White has legal moves, false for black
+     * @return true if the given side has legal moves
+     * */
     public boolean hasLegalMoves(boolean isWhite) {
         Board copy = new Board(this);
         // ew
         // what the algorithm
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 if(copy.pieces[i][j] != null) {
                     if(copy.pieces[i][j].getIsWhite() == isWhite) {
                         for(Move move : copy.pieces[i][j].getPossMoves()) {
@@ -557,5 +575,37 @@ public class Board {
             }
         }
         return false;
+    }
+
+    /**
+     * Promotes the pawn at the given square
+     * @param destination the location of the promoting pawn
+     * @param desiredPiece the piece to promote to
+     */
+    void promotePiece(int[] destination, char desiredPiece) {
+        if(destination.length != 2) { throw new IllegalArgumentException(); }
+        if(destination[1] != 0 && destination[1] != 7) { throw new IllegalArgumentException(); }
+        if(outOfBounds(destination[0])) { throw new IllegalArgumentException(); }
+        boolean isWhite = pieces[destination[0]][destination[1]].getIsWhite();
+        // to set hasMoved to true
+        Move defaultMove = new Move(new int[] {0,0}, null, Move.CaptureStatus.ANY, Move.SpecialMove.NORMAL);
+        switch(desiredPiece) {
+            case 'q':
+                pieces[destination[0]][destination[1]] = new Queen(isWhite);
+                pieces[destination[0]][destination[1]].move(defaultMove);
+                break;
+            case 'n':
+                pieces[destination[0]][destination[1]] = new Knight(isWhite);
+                pieces[destination[0]][destination[1]].move(defaultMove);
+                break;
+            case 'r':
+                pieces[destination[0]][destination[1]] = new Rook(isWhite);
+                pieces[destination[0]][destination[1]].move(defaultMove);
+                break;
+            case 'b':
+                pieces[destination[0]][destination[1]] = new Bishop(isWhite);
+                pieces[destination[0]][destination[1]].move(defaultMove);
+                break;
+        }
     }
 }
