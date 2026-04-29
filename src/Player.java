@@ -29,7 +29,7 @@ public class Player {
      */
     public int[][] getMove(){
         System.out.println("#===============================================================#\n" +
-                "[!] " + name + ": Enter input in the format of two coordinates: \n" +
+                "[!] " + name + ": Enter input in the format of two coordinates \n" +
                 "   (E.G. \"a2 a4\" or \"a2 to a4\" to move white's a pawn two spaces at game start)\n" +
                 "#===============================================================#\n");
         String input = new Scanner(System.in).nextLine();
