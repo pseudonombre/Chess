@@ -37,16 +37,22 @@ public class Game {
      * Plays a game. Gets player's moves and plays them in a loop until the game ends
      */
     public void play() {
-        System.out.println("Welcome to Chess!");
-        System.out.print("Please enter a name for Player 1 (white): ");
+        System.out.println("0 X X X X X X X X X 0\n" +
+                "X WELCOME TO CHESS! X\n" +
+                "0 X X X X X X X X X 0\n");
+        System.out.print("[!] Please enter a name for Player 1 (white): ");
         players[0] = new Player(new Scanner(System.in).nextLine());
-        System.out.print("Please enter a name for Player 2 (black): ");
+        System.out.print("[!] Please enter a name for Player 2 (black): ");
         players[1] = new Player(new Scanner(System.in).nextLine());
-        System.out.println("Each turn, the player will be asked to input a move in the format of two coordinates\n" +
-                "E.G. \"a2 a4\" or \"a2 to a4\" to move white's a pawn two spaces\n" +
-                "Also note that instead of taking a move, you may type \"offer draw\", \"resign\", \"undo\", or \"redo\"\n" +
-                "to trigger the respective action.");
-        System.out.println("Enjoy the game!");
+        System.out.println("\n#=================================================================================================#\n" +
+                "‖ Each turn, the player will be asked to input a move in the format of two coordinates            ‖\n" +
+                "‖ E.G. \"a2 a4\" or \"a2 to a4\" to move white's a pawn two spaces                                    ‖\n" +
+                "‖ Also note that instead of taking a move, you may type \"offer draw\", \"resign\", \"undo\", or \"redo\" ‖\n" +
+                "‖ to trigger the respective action.                                                               ‖\n" +
+                "#=================================================================================================#\n");
+        System.out.println("0 X X X X X X X X 0\n" +
+                "X ENJOY THE GAME! X\n" +
+                "0 X X X X X X X X 0\n");
 
         Player currentPlayer = players[0];
         while(true) {
@@ -55,8 +61,9 @@ public class Game {
             //get input
             int[][] currentInput = getInput();
             //currentInput is null if the player entered something invalid
+            System.out.println();
             if(currentInput == null) {
-                System.out.println("Invalid input");
+                System.out.println("[!] Invalid input\n");
                 continue;
             }
             //non-normal move inputs return lengths of one
@@ -136,7 +143,7 @@ public class Game {
         } else {
             playerOffered = players[0].getName();
         }
-        System.out.println(playerOffered + ", do you accept the draw offer? (Y or N): ");
+        System.out.println("[!] " + playerOffered + ", do you accept the draw offer? (Y or N): ");
         String input = new Scanner(System.in).nextLine();
         input = input.strip().toLowerCase();
         if(input.equals("y") || input.equals("yes")) {
