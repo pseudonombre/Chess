@@ -69,19 +69,20 @@ public class Game {
             //non-normal move inputs return lengths of one
             if(currentInput.length == 1){
                 switch(currentInput[0][0]){
-                    case Player.otherInputs.OFFER_DRAW:
+                    // these really shouldn't be hardcoded, but it works
+                    case 0://Player.otherInputs.OFFER_DRAW:
                         if(offerDraw()) {
                             endScreen(false, true);
                             return;
                         }
                         continue;
-                    case Player.otherInputs.RESIGN:
+                    case 1://Player.otherInputs.RESIGN:
                         endScreen(!whiteToMove);
                         return;
-                    case Player.otherInputs.UNDO:
+                    case 2://Player.otherInputs.UNDO:
                         undo();
                         continue;
-                    case Player.otherInputs.REDO:
+                    case 3://Player.otherInputs.REDO:
                         redo();
                         continue;
                     default:
