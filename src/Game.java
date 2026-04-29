@@ -61,29 +61,27 @@ public class Game {
             }
             //non-normal move inputs return lengths of one
             if(currentInput.length == 1){
-                //int offer_draw = Player.otherInputs.OFFER_DRAW.ordinal();
                 switch(currentInput[0][0]){
-                    // This really shouldn't be hardcoded but architecture is hard
-                    case 0://Player.otherInputs.OFFER_DRAW:
+                    case Player.otherInputs.OFFER_DRAW:
                         if(offerDraw()) {
                             endScreen(false, true);
                             return;
                         }
                         continue;
-                    case 1://Player.otherInputs.RESIGN:
+                    case Player.otherInputs.RESIGN:
                         endScreen(!whiteToMove);
                         return;
-                    case 2://Player.otherInputs.UNDO:
+                    case Player.otherInputs.UNDO:
                         undo();
                         continue;
-                    case 3://Player.otherInputs.REDO:
+                    case Player.otherInputs.REDO:
                         redo();
                         continue;
                     default:
                         throw new IllegalArgumentException("Player.getMove() returned [" + currentInput[0] + "]");
                 }
             }
-            //System.out.println(Arrays.toString(currentInput[0]) + Arrays.toString(currentInput[1]));
+            // Get a move matching the input from the board
             Move currentMove;
             try {
                 currentMove = undoStack.peek().getMove(currentInput, whiteToMove);
@@ -91,8 +89,9 @@ public class Game {
                 System.out.println(e);
                 continue;
             }
-            //play it
+            // play the move
             undoStack.push(new Board(undoStack.peek()));
+            // make move returns true iff a pawn needs promotion, so promotion logic is in this if statement
             if(undoStack.peek().makeMove(currentMove, currentInput[0])) {
                 char desiredPiece = currentPlayer.getPromotion();
                 while(desiredPiece == ' '){
@@ -100,6 +99,7 @@ public class Game {
                 }
                 undoStack.peek().promotePiece(currentInput[1], desiredPiece);
             }
+            // can't redo after following a new path
             redoStack.clear();
             // check for checkmate / stalemate
             if(! undoStack.peek().hasLegalMoves( ! whiteToMove)) {
@@ -191,15 +191,5 @@ public class Game {
         }
         System.out.println(" wins!");
         System.out.println("=====================================");
-    }
-
-    /**
-     * Inputs other than normal moves
-     */
-    public enum otherInputs {
-        OFFER_DRAW,
-        RESIGN,
-        UNDO,
-        REDO
     }
 }

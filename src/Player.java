@@ -44,16 +44,20 @@ public class Player {
         }
 
         int[][] ret = new int[2][2];
+        // take the first two characters as a set of coordinates
         if(input.length() < 2) { return null; }
         ret[0][0] = getFile(input.charAt(0));
         ret[0][1] = getRank(input.charAt(1));
 
+        // take the last two characters as a set of coordinates
         input = input.substring(input.length() - 2);
-
         if(input.length() < 2) { return null; }
         ret[1][0] = getFile(input.charAt(0));
         ret[1][1] = getRank(input.charAt(1));
 
+        /* if any illegal or out of place characters were in the first or last two characters,
+        there will be a -1 in the output, so return null if that happens
+        */
         for(int[] a : ret) {
             for(int i : a) {
                 if(i == -1) { return null; }

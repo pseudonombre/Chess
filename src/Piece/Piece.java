@@ -121,9 +121,12 @@ public abstract class Piece {
      */
     public static ArrayList<Move> reverseMoves(ArrayList<Move> moves) {
         ArrayList<Move> ret = new ArrayList<>();
+        // for every move
         for(Move move : moves){
+            // reverse the destination
             int[] newDestination = move.getDestination().clone();
             newDestination[1] *= -1;
+            // reverse the path
             ArrayList<int[]> oldPath = move.getPath();
             ArrayList<int[]> newPath = new ArrayList<>();
             for(int[] space : oldPath) {
@@ -131,6 +134,7 @@ public abstract class Piece {
                 newSpace[1] *= -1;
                 newPath.add(newSpace);
             }
+            // add the reversed move to the return var
             ret.add(new Move(newDestination, newPath, move.getCaptureStatus(),
                     move.getSpecialMove()));
         }
